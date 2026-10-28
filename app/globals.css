@@ -88,6 +88,8 @@ h1 { letter-spacing: -.01em; }
 .nav .end { display: flex; align-items: center; gap: 16px; font-size: 15px; }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; align-items: center; }
 .chips input { flex: 1 1 240px; max-width: 360px; margin-left: auto; }
+.chips + .chips { margin-top: -12px; }
+.chips select { width: auto; margin-left: auto; }
 .cards { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
 .pet { position: relative; background: var(--surface); border-radius: var(--r-card); overflow: hidden; display: flex; flex-direction: column; transition: transform var(--motion); }
 .pet:hover { transform: translateY(-2px); }
@@ -96,6 +98,7 @@ h1 { letter-spacing: -.01em; }
 .pet .ph { aspect-ratio: 4 / 3; width: 100%; object-fit: cover; background: color-mix(in srgb, var(--btn) 10%, var(--bg2)); display: flex; align-items: center; justify-content: center; color: color-mix(in srgb, var(--btn) 45%, transparent); }
 .pet .body { padding: 12px 16px 16px; display: flex; flex-direction: column; gap: 4px; }
 .pet .name { font-size: 20px; line-height: 28px; font-weight: 700; }
+.pet .name::first-letter { text-transform: uppercase; }
 .pet .sub { font-size: 13px; line-height: 16px; color: var(--text2); }
 .pet .actions { display: flex; gap: 8px; padding: 0 16px 16px; }
 .pet .actions a, .pet .actions button { min-height: 40px; display: inline-flex; align-items: center; padding: 0 16px; font-size: 13px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); color: var(--text); font-weight: 600; }
@@ -103,6 +106,7 @@ h1 { letter-spacing: -.01em; }
 .tag { position: absolute; top: 12px; left: 12px; font-size: 11px; line-height: 16px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 4px 12px; border-radius: 999px; }
 .tag.lost { color: var(--lost); background: var(--lost-bg); }
 .tag.found { color: var(--found); background: var(--found-bg); }
+.tag.reunited { color: var(--bg); background: var(--text); }
 .empty { padding: 48px 0; text-align: center; color: var(--text2); grid-column: 1 / -1; }
 .field { display: flex; flex-direction: column; gap: 8px; }
 .facts { display: grid; grid-template-columns: 120px 1fr; gap: 12px 16px; background: var(--surface); border-radius: var(--r-card); padding: 24px; margin: 24px 0 0; font-size: 15px; line-height: 20px; }
@@ -114,6 +118,7 @@ h1 { letter-spacing: -.01em; }
 @media (max-width: 600px) {
   .shell { padding-top: 16px; }
   .chips input { flex-basis: 100%; max-width: none; margin-left: 0; }
+  .chips button { padding: 0 16px; }
   .nav .end { gap: 12px; }
   .nav .end > span { display: none; }
 }

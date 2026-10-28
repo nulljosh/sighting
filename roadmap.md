@@ -137,12 +137,12 @@ Skipped: GPS collars, pet sitting, shopping.
 |---|---|---|---|
 | House UI: capsule controls, photo-first cards, Lost/Found pill, light and dark | PawBoost, Petco Love Lost | S | done 2026-10-28 (web) |
 | Call and Share right on each card | PawBoost | S | done 2026-10-28 (web) |
-| Species and sex filter chips | PawBoost, Finding Rover | S | open |
-| Sort by newest, last seen date, distance | PawBoost | S | open |
-| Reunited tab (resolved listings, happy endings) | PawBoost | S | open |
+| Species filter chips (built from the species people actually post; sex skipped, most posts leave it blank) | PawBoost, Finding Rover | S | done 0.2.0 (web) |
+| Sort by newest or last seen (distance waits on the map row) | PawBoost | S | done 0.2.0 (web) |
+| Reunited tab (resolved listings, happy endings) | PawBoost | S | done 0.2.0 (web) |
 | Map on the listing detail and a map view of the board | PawBoost, Nextdoor | M | open |
 | Step-by-step post flow with photo first | PawBoost, Petco Love Lost | M | open |
 | Alerts for new lost pets near you | PawBoost, Petco Love Lost, Nextdoor | L | open |
 | Printable poster from a listing | PawBoost | M | done 2026-10-28 (web) |
 | Photos on old listings point at a dead storage URL; board now falls back to a paw | - | S | open |
-| New name (Joshua 2026-10-28: Sighting has to go) | - | S | probing |
+| New name: Sighting, after Homeward and Maera | - | S | done 2026-10-28 |

@@ -10,7 +10,9 @@ const PAW = '<svg width="56" height="56" viewBox="0 0 24 24" fill="currentColor"
 
 export default function Home() {
   const [listings, setListings] = useState<Listing[]>([]);
-  const [filter, setFilter] = useState<"all" | "lost" | "found">("all");
+  const [tab, setTab] = useState<"all" | "lost" | "found" | "reunited">("all");
+  const [species, setSpecies] = useState("");
+  const [sort, setSort] = useState<"new" | "seen">("new");
   const [query, setQuery] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
 
@@ -18,7 +20,6 @@ export default function Home() {
     spark
       .from("listings")
       .select("*")
-      .eq("status", "active")
       .order("created_at", { ascending: false })
       .then(({ data }) => setListings((data as Listing[]) ?? []));
     spark.auth.getSession().then(({ data }) => setLoggedIn(!!data.session));
@@ -29,23 +30,30 @@ export default function Home() {
   async function markFound(id: string) {
     const { data } = await spark.rpc("resolve_listing", { p_id: id }).single();
     if (!data) return;
-    setListings((prev) => prev.filter((l) => l.id !== id));
+    setListings((prev) => prev.map((l) => (l.id === id ? { ...l, status: "resolved" } : l)));
     spark.functions.invoke("notify-found", { body: { listingId: id } });
   }
 
   async function share(l: Listing) {
-    const url = `${location.origin}/listing?id=${l.id}`;
+    const url = `https://sighting.jaybulb.com/listing?id=${l.id}`;
     const title = `${l.type === "lost" ? "Lost" : "Found"}: ${l.pet_name || l.species}`;
     if (navigator.share) await navigator.share({ title, url }).catch(() => {});
     else await navigator.clipboard?.writeText(url).catch(() => {});
   }
 
+  const kind = (l: Listing) => l.species.trim().toLowerCase();
+  const kinds = [...new Set(listings.map(kind).filter(Boolean))].sort();
+  const seen = (l: Listing) => Date.parse(l.last_seen_at ?? l.created_at) || 0;
+
   const filtered = listings.filter((l) => {
-    if (filter !== "all" && l.type !== filter) return false;
+    if ((tab === "reunited") !== (l.status === "resolved")) return false;
+    if ((tab === "lost" || tab === "found") && l.type !== tab) return false;
+    if (species && kind(l) !== species) return false;
     if (!query) return true;
     const haystack = `${l.pet_name ?? ""} ${l.species} ${l.color ?? ""} ${l.last_seen_location}`.toLowerCase();
     return haystack.includes(query.toLowerCase());
   });
+  if (sort === "seen") filtered.sort((a, b) => seen(b) - seen(a));
 
   return (
     <div className="shell">
@@ -58,8 +66,8 @@ export default function Home() {
       </header>
 
       <div className="chips">
-        {(["all", "lost", "found"] as const).map((f) => (
-          <button key={f} onClick={() => setFilter(f)} aria-pressed={filter === f}>
+        {(["all", "lost", "found", "reunited"] as const).map((f) => (
+          <button key={f} onClick={() => setTab(f)} aria-pressed={tab === f}>
             {f[0].toUpperCase() + f.slice(1)}
           </button>
         ))}
@@ -69,6 +77,18 @@ export default function Home() {
           placeholder="Search name, species, place"
           aria-label="Search listings"
         />
+      </div>
+
+      <div className="chips">
+        {kinds.length > 1 && ["", ...kinds].map((k) => (
+          <button key={k || "any"} onClick={() => setSpecies(k)} aria-pressed={species === k}>
+            {k ? k[0].toUpperCase() + k.slice(1) : "Any pet"}
+          </button>
+        ))}
+        <select value={sort} onChange={(e) => setSort(e.target.value as "new" | "seen")} aria-label="Sort listings">
+          <option value="new">Newest posts</option>
+          <option value="seen">Last seen</option>
+        </select>
       </div>
 
       <ul className="cards">
@@ -87,15 +107,15 @@ export default function Home() {
                 <span className="sub">{l.last_seen_location}</span>
               </div>
             </Link>
-            <span className={`tag ${l.type}`}>{l.type}</span>
+            {l.status === "resolved" ? <span className="tag reunited">reunited</span> : <span className={`tag ${l.type}`}>{l.type}</span>}
             <div className="actions">
-              {l.contact_phone && <a href={`tel:${l.contact_phone}`}>Call</a>}
+              {l.status === "active" && l.contact_phone && <a href={`tel:${l.contact_phone}`}>Call</a>}
               <button onClick={() => share(l)}>Share</button>
-              {loggedIn && <button onClick={() => markFound(l.id)}>Mark found</button>}
+              {loggedIn && l.status === "active" && <button onClick={() => markFound(l.id)}>Mark reunited</button>}
             </div>
           </li>
         ))}
-        {filtered.length === 0 && <li className="empty">No listings yet.</li>}
+        {filtered.length === 0 && <li className="empty">{tab === "reunited" ? "No reunions yet." : query || species ? "Nothing matches." : "No listings yet."}</li>}
       </ul>
     </div>
   );
