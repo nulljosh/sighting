@@ -117,3 +117,26 @@ h1 { letter-spacing: -.01em; }
   .nav .end { gap: 12px; }
   .nav .end > span { display: none; }
 }
+
+/* Board cards read like posters on a pole: paper, a big word at the top. */
+.pet .tag { top: 12px; left: 12px; font-size: 13px; letter-spacing: .12em; padding: 4px 16px; }
+
+/* Print poster: hidden on screen, the only thing on paper. */
+.poster { display: none; }
+@media print {
+  @page { size: letter; margin: 0.5in; }
+  html, body { background: #fff; color: #000; min-height: 0 !important; height: auto; }
+  .shell { padding: 0; }
+  .poster-paw { width: 2.4in; height: 2.4in; margin: 0 auto; color: #c9302c; opacity: .9; }
+  .shell > *:not(.poster) { display: none !important; }
+  .poster { display: flex; flex-direction: column; justify-content: space-between; height: 9.6in; overflow: hidden; text-align: center; font-family: var(--font); color: #000; }
+  .poster p { margin: 0; }
+  .poster-word { font-size: 96px; line-height: 1; font-weight: 800; text-transform: uppercase; letter-spacing: -.02em; color: #c9302c; margin-bottom: 16px !important; }
+  .poster img { width: 100%; max-height: 4.6in; object-fit: cover; border-radius: 0; margin-bottom: 16px; }
+  .poster-ask { font-size: 36px; font-weight: 700; }
+  .poster-name { font-size: 44px; line-height: 1.1; font-weight: 700; text-transform: capitalize; }
+  .poster-line { font-size: 22px; line-height: 1.4; }
+  .poster-reward { font-size: 32px; font-weight: 800; margin-top: 12px !important; }
+  .poster-phone { font-size: 56px; font-weight: 800; margin-top: 16px !important; letter-spacing: .02em; }
+  .poster-url { font-size: 14px; margin-top: 12px !important; color: #444; }
+}

@@ -35,7 +35,33 @@ function ListingDetailInner() {
 
   return (
     <div className="shell narrow">
-      <Link href="/board">&larr; Back to the board</Link>
+      <div className="no-print" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16 }}>
+        <Link href="/board">&larr; Back to the board</Link>
+        <button onClick={() => window.print()}>Print poster</button>
+      </div>
+
+      {/* The printed page is a pole poster: big word, big photo, big phone number. */}
+      <div className="poster" aria-hidden="true">
+        <p className="poster-word">{listing.type === "lost" ? "Lost" : "Found"} {listing.species}</p>
+        {listing.photo_url && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={listing.photo_url} alt="" />
+        )}
+        {!listing.photo_url && (
+          <svg className="poster-paw" viewBox="0 0 24 24" fill="currentColor"><circle cx="6" cy="9" r="2.2" /><circle cx="10" cy="5.5" r="2.2" /><circle cx="14" cy="5.5" r="2.2" /><circle cx="18" cy="9" r="2.2" /><path d="M12 11c-3 0-6 4-6 6.5 0 1.6 1.3 2.5 3 2.5 1.2 0 2-.6 3-.6s1.8.6 3 .6c1.7 0 3-.9 3-2.5C18 15 15 11 12 11z" /></svg>
+        )}
+        <p className="poster-ask">Have you seen {listing.type === "lost" ? "me" : "my family"}?</p>
+        <div>
+        <p className="poster-name">{listing.pet_name || [listing.color, listing.species].filter(Boolean).join(" ")}</p>
+        <p className="poster-line">{[listing.color, listing.sex].filter(Boolean).join(", ")}</p>
+        <p className="poster-line">Last seen: {listing.last_seen_location}{listing.last_seen_at ? `, ${listing.last_seen_at}` : ""}</p>
+        {listing.reward && <p className="poster-reward">Reward {listing.reward}</p>}
+        </div>
+        <div>
+        {listing.contact_phone && <p className="poster-phone">{listing.contact_phone}</p>}
+        <p className="poster-url">{typeof location !== "undefined" ? `${location.host}/listing?id=${listing.id}` : ""}</p>
+        </div>
+      </div>
       <h1 style={{ fontSize: 34, lineHeight: "40px", fontWeight: 700, margin: "16px 0 8px" }}>
         {listing.type === "lost" ? "Lost" : "Found"}: {listing.pet_name || listing.species}
       </h1>
