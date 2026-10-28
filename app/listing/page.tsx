@@ -4,11 +4,14 @@ import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { spark, Listing } from "@/lib/spark";
+import { geocode } from "@/lib/geo";
+import MiniMap from "@/lib/MiniMap";
 
 function ListingDetailInner() {
   const id = useSearchParams().get("id");
   const [listing, setListing] = useState<Listing | null>(null);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [spot, setSpot] = useState<{ lat: number; lng: number } | null>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -17,7 +20,12 @@ function ListingDetailInner() {
       .select("*")
       .eq("id", id)
       .single()
-      .then(({ data }) => setListing(data as Listing));
+      .then(async ({ data }) => {
+        const l = data as Listing;
+        setListing(l);
+        // Older posts never saved coordinates, so look the place up from its text.
+        setSpot(l.lat != null && l.lng != null ? { lat: l.lat, lng: l.lng } : await geocode(l.last_seen_location));
+      });
     spark.auth.getSession().then(({ data }) => setLoggedIn(!!data.session));
   }, [id]);
 
@@ -66,14 +74,15 @@ function ListingDetailInner() {
         {listing.type === "lost" ? "Lost" : "Found"}: {listing.pet_name || listing.species}
       </h1>
       {listing.status === "resolved" ? (
-        <p style={{ color: "var(--found-bg)", fontWeight: 600 }}>Resolved</p>
+        <p style={{ color: "var(--found-bg)", fontWeight: 600 }}>Reunited</p>
       ) : (
-        loggedIn && <button onClick={markFound} className="btn-solid">Mark found</button>
+        loggedIn && <button onClick={markFound} className="btn-solid">Mark reunited</button>
       )}
       {listing.photo_url && (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={listing.photo_url} alt={listing.pet_name ?? listing.species} style={{ borderRadius: 28, width: "100%", height: "auto", marginTop: 16 }} />
       )}
+      {spot && <MiniMap {...spot} label={listing.last_seen_location} />}
       <dl className="facts">
         <dt>Species</dt><dd>{listing.species}</dd>
         <dt>Color</dt><dd>{listing.color || "-"}</dd>

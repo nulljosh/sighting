@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { spark, Listing } from "@/lib/spark";
+import { geocode } from "@/lib/geo";
 
 export default function PostListing() {
   const router = useRouter();
@@ -24,8 +25,10 @@ export default function PostListing() {
       }
     }
 
+    const spot = await geocode(String(form.get("last_seen_location")));
     const { data, error } = await spark
       .rpc("create_listing", {
+        ...spot,
         type: form.get("type"),
         species: form.get("species"),
         last_seen_location: form.get("last_seen_location"),
