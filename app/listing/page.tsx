@@ -59,7 +59,7 @@ function ListingDetailInner() {
         </div>
         <div>
         {listing.contact_phone && <p className="poster-phone">{listing.contact_phone}</p>}
-        <p className="poster-url">{typeof location !== "undefined" ? `${location.host}/listing?id=${listing.id}` : ""}</p>
+        <p className="poster-url">sighting.jaybulb.com/listing?id={listing.id}</p>
         </div>
       </div>
       <h1 style={{ fontSize: 34, lineHeight: "40px", fontWeight: 700, margin: "16px 0 8px" }}>
