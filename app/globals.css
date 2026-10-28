@@ -108,7 +108,7 @@ h1 { letter-spacing: -.01em; }
 .tag.found { color: var(--found); background: var(--found-bg); }
 .tag.reunited { color: var(--bg); background: var(--text); }
 .minimap { display: block; position: relative; overflow: hidden; aspect-ratio: 16 / 9; border-radius: var(--r-card); margin-top: 16px; background: var(--surface); }
-.minimap .grid { position: absolute; width: 1280px; height: 768px; }
+.minimap .grid { position: absolute; width: 1792px; height: 768px; }
 .minimap img { position: absolute; max-width: none; }
 .minimap.tall { aspect-ratio: auto; height: 360px; margin: 0 0 24px; }
 .minimap .pin { position: absolute; width: 24px; height: 24px; margin: -12px 0 0 -12px; border-radius: 50%; background: var(--btn); border: 4px solid #fff; }

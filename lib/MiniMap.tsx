@@ -1,6 +1,6 @@
 // Static map from OpenStreetMap tiles: plain images, so no iframe, no WebGL, no map library.
-// Zoom is the closest that fits every pin in a ~280x200 box (a phone-width card); a 5x3 tile grid around the
-// centre covers any card up to 1024px wide.
+// Zoom is the closest that fits every pin in a ~280x200 box (a phone-width card); a 7x3 tile grid around the
+// centre covers any card up to 1536px wide.
 const T = 256;
 
 export type Pin = { lat: number; lng: number; href?: string; label: string; kind?: string };
@@ -24,10 +24,10 @@ export default function MiniMap({ pins, href }: { pins: Pin[]; href?: string }) 
   const pts = pins.map((p) => project(p.lat, p.lng, z));
   const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
   const cx = (Math.min(...xs) + Math.max(...xs)) / 2, cy = (Math.min(...ys) + Math.max(...ys)) / 2;
-  const gx = (Math.floor(cx / T) - 2) * T, gy = (Math.floor(cy / T) - 1) * T;
+  const gx = (Math.floor(cx / T) - 3) * T, gy = (Math.floor(cy / T) - 1) * T;
   const tiles = [];
   for (let ty = gy / T; ty < gy / T + 3; ty++)
-    for (let tx = gx / T; tx < gx / T + 5; tx++)
+    for (let tx = gx / T; tx < gx / T + 7; tx++)
       tiles.push(
         // eslint-disable-next-line @next/next/no-img-element
         <img key={`${tx},${ty}`} src={`https://tile.openstreetmap.org/${z}/${tx}/${ty}.png`} alt="" width={T} height={T}
