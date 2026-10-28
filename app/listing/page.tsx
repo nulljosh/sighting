@@ -82,7 +82,7 @@ function ListingDetailInner() {
         // eslint-disable-next-line @next/next/no-img-element
         <img src={listing.photo_url} alt={listing.pet_name ?? listing.species} style={{ borderRadius: 28, width: "100%", height: "auto", marginTop: 16 }} />
       )}
-      {spot && <MiniMap {...spot} label={listing.last_seen_location} />}
+      {spot && <MiniMap pins={[{ ...spot, label: listing.last_seen_location, kind: listing.type }]} href={`https://www.openstreetmap.org/?mlat=${spot.lat}&mlon=${spot.lng}#map=16/${spot.lat}/${spot.lng}`} />}
       <dl className="facts">
         <dt>Species</dt><dd>{listing.species}</dd>
         <dt>Color</dt><dd>{listing.color || "-"}</dd>
