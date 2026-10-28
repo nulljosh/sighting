@@ -21,7 +21,7 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>sighting</string>
+				<string>homeward</string>
 			</array>
 		</dict>
 	</array>

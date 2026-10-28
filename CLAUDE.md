@@ -12,9 +12,9 @@ Live at sighting.jaybulb.com (Cloudflare Pages project `homeward`; old hosts hom
 - `app/listing/page.tsx`: public detail view (`?id=`), map, print poster
 - `app/listing/edit/page.tsx`: token-gated resolve flow
 - `ios/project.yml`: XcodeGen spec; regenerate the `.xcodeproj` with `xcodegen generate` after changing this or adding new Swift files
-- `ios/Sighting/SupabaseClient.swift`: reads `SUPABASE_URL`/`SUPABASE_ANON_KEY` from process environment (set via Xcode scheme, not a plist)
+- `ios/Sighting/API.swift`: jaybulb-api client with no SDK (session in the Keychain, email and Apple sign-in, tolerant date decoding for old Postgres-style rows); `ListingStore.swift` makes the listing calls
 - `lib/AuthBar.tsx`: header auth status widget; `app/login`, `app/register`, `app/forgot-password`, `app/reset-password`, Supabase Auth pages. Posting still works anonymously (user_id is null); logged-in posts get `user_id` set and can be edited without the edit_token.
-- `ios/Sighting/AuthView.swift`: iOS/macOS auth (single target, `supportedDestinations: [iOS, macOS]`) — email/password, Apple, Google (`homeward://` redirect scheme), password reset, account deletion via the shared spark `delete-account` Edge Function
+- `ios/Sighting/AuthView.swift`: iOS/macOS auth (single target, `supportedDestinations: [iOS, macOS]`): email and password, Apple (bundle id must be in jaybulb-api `APPLE_AUDIENCES`), password reset, account deletion. Google sign-in is web only for now. URL scheme stays `homeward`
 
 ## Conventions
 - No server-side API routes; both clients (web, iOS) talk to jaybulb-api directly.

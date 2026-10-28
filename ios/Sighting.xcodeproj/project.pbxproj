@@ -7,16 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		07A61EBF8C8A4AD6D2061417 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = EBAF84AEECA8847C59A7C39E /* Supabase */; };
 		0A8F4F0F2CBCEA46A4948E78 /* ListingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA8E57B2105CB13DF0A5F1CF /* ListingsView.swift */; };
 		1B288257AADCD79AF73FFA7C /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734EC69A32FC5FD702FA9C84 /* AuthView.swift */; };
 		42FA397496253456D7DA253E /* ListingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F5485B0A1FDFDEDA13A223B /* ListingStore.swift */; };
 		44A4A84749A989077EFB07BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 79CAB71F635BCB5BC2B66DBA /* Assets.xcassets */; };
+		4F23A057A1BF7EACBD16665A /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA59955093DC0E6232C58C0F /* API.swift */; };
 		8BDCF8D081048B83C9358DF6 /* ListingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E8C52E2E1C9AB2684FB4A2 /* ListingDetailView.swift */; };
 		B4136427ABA5FFA1C8673D93 /* PostListingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1D18159747055D797E70311 /* PostListingView.swift */; };
 		C108A17A87F6D4706CC6E93A /* SightingApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297E46F7362F0F55A3BCDF2F /* SightingApp.swift */; };
 		C557360BA6817684093B7800 /* Listing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 565962F74070C36AE353DB1B /* Listing.swift */; };
-		E6339071D4555A028E8E52A7 /* SupabaseClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BDFE1E4030513046C8ED942 /* SupabaseClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,23 +25,12 @@
 		734EC69A32FC5FD702FA9C84 /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
 		79CAB71F635BCB5BC2B66DBA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		842D2026C228BB8A274013B7 /* Sighting.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Sighting.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		8BDFE1E4030513046C8ED942 /* SupabaseClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseClient.swift; sourceTree = "<group>"; };
 		9F5485B0A1FDFDEDA13A223B /* ListingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingStore.swift; sourceTree = "<group>"; };
+		AA59955093DC0E6232C58C0F /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		CA8E57B2105CB13DF0A5F1CF /* ListingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingsView.swift; sourceTree = "<group>"; };
 		F1D18159747055D797E70311 /* PostListingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostListingView.swift; sourceTree = "<group>"; };
 		F8E8C52E2E1C9AB2684FB4A2 /* ListingDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFrameworksBuildPhase section */
-		89FE5BE83B949E3835BE328A /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				07A61EBF8C8A4AD6D2061417 /* Supabase in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		325AA5B7E48D0D4364D66082 = {
@@ -56,6 +44,7 @@
 		9760002BAEB823D454EC7668 /* Sighting */ = {
 			isa = PBXGroup;
 			children = (
+				AA59955093DC0E6232C58C0F /* API.swift */,
 				79CAB71F635BCB5BC2B66DBA /* Assets.xcassets */,
 				734EC69A32FC5FD702FA9C84 /* AuthView.swift */,
 				04C8DE42D11D26E272475451 /* Info.plist */,
@@ -65,7 +54,6 @@
 				CA8E57B2105CB13DF0A5F1CF /* ListingsView.swift */,
 				F1D18159747055D797E70311 /* PostListingView.swift */,
 				297E46F7362F0F55A3BCDF2F /* SightingApp.swift */,
-				8BDFE1E4030513046C8ED942 /* SupabaseClient.swift */,
 			);
 			path = Sighting;
 			sourceTree = "<group>";
@@ -87,7 +75,6 @@
 			buildPhases = (
 				733985118C87186539ACBC84 /* Sources */,
 				23019E64D89CF6E1353B0F17 /* Resources */,
-				89FE5BE83B949E3835BE328A /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -95,7 +82,6 @@
 			);
 			name = Sighting;
 			packageProductDependencies = (
-				EBAF84AEECA8847C59A7C39E /* Supabase */,
 			);
 			productName = Sighting;
 			productReference = 842D2026C228BB8A274013B7 /* Sighting.app */;
@@ -124,9 +110,6 @@
 			);
 			mainGroup = 325AA5B7E48D0D4364D66082;
 			minimizedProjectReferenceProxies = 1;
-			packageReferences = (
-				35062732381237AC5345E087 /* XCRemoteSwiftPackageReference "supabase-swift" */,
-			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B4945DE5C6B9E79F30750A6E /* Products */;
 			projectDirPath = "";
@@ -153,6 +136,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F23A057A1BF7EACBD16665A /* API.swift in Sources */,
 				1B288257AADCD79AF73FFA7C /* AuthView.swift in Sources */,
 				C557360BA6817684093B7800 /* Listing.swift in Sources */,
 				8BDCF8D081048B83C9358DF6 /* ListingDetailView.swift in Sources */,
@@ -160,7 +144,6 @@
 				0A8F4F0F2CBCEA46A4948E78 /* ListingsView.swift in Sources */,
 				B4136427ABA5FFA1C8673D93 /* PostListingView.swift in Sources */,
 				C108A17A87F6D4706CC6E93A /* SightingApp.swift in Sources */,
-				E6339071D4555A028E8E52A7 /* SupabaseClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -368,25 +351,6 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		35062732381237AC5345E087 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/supabase/supabase-swift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		EBAF84AEECA8847C59A7C39E /* Supabase */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 35062732381237AC5345E087 /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = Supabase;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 9A218B765F54508294D0AE4A /* Project object */;
 }

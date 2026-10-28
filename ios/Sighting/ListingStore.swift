@@ -1,8 +1,10 @@
 import Foundation
 import Observation
 
-@Observable
+@MainActor @Observable
 final class ListingStore {
+    private var account: Account { .shared }
+
     var listings: [Listing] = []
     var loading = false
     var errorMessage: String?
@@ -23,13 +25,8 @@ final class ListingStore {
         loading = true
         defer { loading = false }
         do {
-            listings = try await supabase
-                .from("listings")
-                .select()
-                .order("created_at", ascending: false)
-                .limit(500)
-                .execute()
-                .value
+            let data = try await account.call("GET", "/rest/listings?select=*&order=created_at.desc&limit=500")
+            listings = try JSONDecoder.api.decode([Listing].self, from: data)
             errorMessage = nil
         } catch {
             errorMessage = error.localizedDescription
@@ -38,11 +35,9 @@ final class ListingStore {
 
     func post(_ new: NewListing) async -> Bool {
         do {
-            let created: Listing = try await supabase
-                .rpc("create_listing", params: new)
-                .single()
-                .execute()
-                .value
+            // Signed in, the post is tied to the account; otherwise the edit token is the only key.
+            let data = try await account.call("POST", "/rpc/create_listing", raw: (try JSONEncoder().encode(new), "application/json"), authed: account.isSignedIn)
+            let created = try JSONDecoder.api.decode(Listing.self, from: data)
             if let token = created.edit_token { remember(id: created.id, token: token) }
             listings.insert(created, at: 0)
             errorMessage = nil
@@ -55,11 +50,8 @@ final class ListingStore {
 
     func resolve(_ listing: Listing) async {
         guard let token = token(for: listing) else { return }
-        struct Params: Encodable { let p_id: UUID; let p_token: UUID; let p_status: String }
         do {
-            try await supabase
-                .rpc("update_listing", params: Params(p_id: listing.id, p_token: token, p_status: "resolved"))
-                .execute()
+            _ = try await account.call("POST", "/rpc/update_listing", json: ["p_id": listing.id.uuidString.lowercased(), "p_token": token.uuidString.lowercased(), "p_status": "resolved"])
             if let i = listings.firstIndex(where: { $0.id == listing.id }) {
                 listings[i].status = .resolved
             }
@@ -70,10 +62,10 @@ final class ListingStore {
     }
 
     func uploadPhoto(_ data: Data) async -> String? {
-        let path = "\(UUID().uuidString).jpg"
+        struct Uploaded: Decodable { let url: String }
         do {
-            try await supabase.storage.from("pet-photos").upload(path, data: data)
-            return try supabase.storage.from("pet-photos").getPublicURL(path: path).absoluteString
+            let res = try await account.call("POST", "/storage/pet-photos/\(UUID().uuidString).jpg", raw: (data, "image/jpeg"))
+            return try JSONDecoder().decode(Uploaded.self, from: res).url
         } catch {
             errorMessage = error.localizedDescription
             return nil

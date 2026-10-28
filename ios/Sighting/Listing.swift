@@ -18,6 +18,8 @@ struct Listing: Codable, Identifiable, Hashable {
     let description: String?
     let tag_number: String?
     let last_seen_location: String
+    let lat: Double?
+    let lng: Double?
     let photo_url: String?
     let contact_phone: String?
     let contact_email: String?

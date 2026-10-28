@@ -21,7 +21,7 @@ targets:
       path: Sighting/Info.plist
       properties:
         CFBundleURLTypes:
-          - CFBundleURLSchemes: [sighting]
+          - CFBundleURLSchemes: [homeward]
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.nulljosh.homeward
@@ -36,9 +36,3 @@ targets:
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         MARKETING_VERSION: "1.0"
         CURRENT_PROJECT_VERSION: "1"
-    dependencies:
-      - package: Supabase
-packages:
-  Supabase:
-    url: https://github.com/supabase/supabase-swift
-    from: 2.0.0
