@@ -1,3 +1,0 @@
-# homeward.heyitsmejosh.com is canonical; the old pets. host is kept only so
-# existing links keep working, so send it on rather than serving a second copy.
-https://pets.heyitsmejosh.com/* https://homeward.heyitsmejosh.com/:splat 301

@@ -8,7 +8,7 @@ Sighting exists because the places people actually post a lost pet, Facebook
 groups and Craigslist, are both account-walled and neither is searchable by
 location or species, which costs exactly the minutes that matter most. It is a lost and found board for pets. Post one, find one, mark it resolved.
 Web plus native apps on a shared Supabase backend. Live at
-[homeward.heyitsmejosh.com](https://homeward.heyitsmejosh.com).
+[sighting.jaybulb.com](https://sighting.jaybulb.com).
 
 ## Problem
 
