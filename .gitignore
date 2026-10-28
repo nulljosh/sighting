@@ -1,0 +1,11 @@
+node_modules/
+.next/
+.DS_Store
+out/
+.env.local
+kmp/.gradle/
+kmp/build/
+kmp/*/build/
+kmp/local.properties
+.build/
+*.tsbuildinfo

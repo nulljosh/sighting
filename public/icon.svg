@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <rect width="200" height="200" rx="40" fill="#1c1917"/>
+  <!-- subtle grid texture -->
+  <line x1="20" y1="100" x2="180" y2="100" stroke="rgba(245,158,11,0.06)" stroke-width="1"/>
+  <line x1="100" y1="20" x2="100" y2="180" stroke="rgba(245,158,11,0.06)" stroke-width="1"/>
+  <!-- cat silhouette -->
+  <g fill="#f59e0b">
+    <ellipse cx="100" cy="124" rx="44" ry="36"/>
+    <ellipse cx="52" cy="76" rx="20" ry="24"/>
+    <ellipse cx="148" cy="76" rx="20" ry="24"/>
+    <ellipse cx="80" cy="44" rx="16" ry="20"/>
+    <ellipse cx="120" cy="44" rx="16" ry="20"/>
+  </g>
+  <!-- eyes -->
+  <g fill="#1c1917">
+    <ellipse cx="84" cy="118" rx="6" ry="8"/>
+    <ellipse cx="116" cy="118" rx="6" ry="8"/>
+  </g>
+  <!-- paw-print accent -->
+  <g fill="rgba(245,158,11,0.35)">
+    <ellipse cx="158" cy="158" rx="6" ry="5"/>
+    <ellipse cx="170" cy="150" rx="4" ry="3.5"/>
+    <ellipse cx="170" cy="166" rx="4" ry="3.5"/>
+    <ellipse cx="180" cy="158" rx="3.5" ry="3"/>
+  </g>
+</svg>

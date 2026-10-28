@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+/* Sighting on the house system (hermes/landing/tokens.css): 8 point grid, 48 point capsule
+   controls, radii 20 and 28, system font, no shadows. Paw orange is the only colour it owns. */
+:root {
+  --accent: #b84f00;          /* actions and links, AA on paper */
+  --btn: #e06a0a;             /* solid buttons, dark label */
+  --btn-ink: #1a1a1a;
+  --ring: color-mix(in srgb, var(--accent) 30%, transparent);
+  --bg: #fdfdfd;
+  --bg2: #f4f3f1;
+  --surface: #f4f3f1;
+  --line: #e0ded9;
+  --border: var(--line);
+  --text: #1a1a1a;
+  --text2: #5f5c57;
+  --text3: #8c8983;
+  --lost: #ffffff; --lost-bg: #c9302c;
+  --found: #ffffff; --found-bg: #2f8a4e;
+  --clay: var(--btn); --clay-deep: var(--accent);
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-body: var(--font);
+  --control: 48px;
+  --r-card: 20px;
+  --motion: .2s ease;
+  --background: var(--bg);
+  --foreground: var(--text);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --accent: #ff9a4a;
+    --btn: #e06a0a;
+    --btn-ink: #1a1a1a;
+    --bg: #121110;
+    --bg2: #1c1b19;
+    --surface: #1c1b19;
+    --line: #302e2a;
+    --text: #f3f1ed;
+    --text2: #a8a49c;
+    --text3: #6f6b64;
+    --lost-bg: #d9534f;
+    --found-bg: #3a9d5d;
+  }
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 17px;
+  line-height: 24px;
+}
+
+/* Unlayered, so these beat the Tailwind utilities still on older pages. */
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+input, select, textarea {
+  font: inherit; font-size: 15px; color: var(--text); background: var(--bg);
+  border: 1px solid var(--line); border-radius: 999px; padding: 0 20px; min-height: var(--control);
+  transition: border-color var(--motion);
+}
+textarea { border-radius: 20px; padding: 12px 20px; min-height: 96px; }
+input[type="file"] { padding: 12px 20px; }
+input:hover, select:hover, textarea:hover { border-color: var(--text3); }
+input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visible {
+  outline: none; box-shadow: 0 0 0 4px var(--ring);
+}
+button {
+  font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; min-height: var(--control);
+  border-radius: 999px; padding: 0 24px; border: 1px solid var(--line); background: var(--bg); color: var(--text);
+  transition: background var(--motion), border-color var(--motion);
+}
+button:hover { background: var(--surface); }
+button:disabled { opacity: .5; cursor: default; }
+.btn-solid, button.btn-solid { background: var(--btn); border-color: var(--btn); color: var(--btn-ink); }
+.btn-solid:hover, button.btn-solid:hover { filter: brightness(1.08); background: var(--btn); }
+button[aria-pressed="true"] { background: var(--text); border-color: var(--text); color: var(--bg); }
+label { font-size: 15px; font-weight: 500; color: var(--text2); }
+h1 { letter-spacing: -.01em; }
+
+.shell { max-width: 1120px; margin: 0 auto; padding: 24px 20px 48px; width: 100%; }
+.shell.narrow { max-width: 560px; }
+.nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+.nav .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 20px; color: var(--text); }
+.nav .brand img { border-radius: 22.5%; }
+.nav .brand:hover { text-decoration: none; }
+.nav .end { display: flex; align-items: center; gap: 16px; font-size: 15px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; align-items: center; }
+.chips input { flex: 1 1 240px; max-width: 360px; margin-left: auto; }
+.cards { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+.pet { position: relative; background: var(--surface); border-radius: var(--r-card); overflow: hidden; display: flex; flex-direction: column; transition: transform var(--motion); }
+.pet:hover { transform: translateY(-2px); }
+.pet > a { color: var(--text); display: flex; flex-direction: column; flex: 1; }
+.pet > a:hover { text-decoration: none; }
+.pet .ph { aspect-ratio: 4 / 3; width: 100%; object-fit: cover; background: color-mix(in srgb, var(--btn) 10%, var(--bg2)); display: flex; align-items: center; justify-content: center; color: color-mix(in srgb, var(--btn) 45%, transparent); }
+.pet .body { padding: 12px 16px 16px; display: flex; flex-direction: column; gap: 4px; }
+.pet .name { font-size: 20px; line-height: 28px; font-weight: 700; }
+.pet .sub { font-size: 13px; line-height: 16px; color: var(--text2); }
+.pet .actions { display: flex; gap: 8px; padding: 0 16px 16px; }
+.pet .actions a, .pet .actions button { min-height: 40px; display: inline-flex; align-items: center; padding: 0 16px; font-size: 13px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); color: var(--text); font-weight: 600; }
+.pet .actions a:hover { text-decoration: none; background: var(--surface); }
+.tag { position: absolute; top: 12px; left: 12px; font-size: 11px; line-height: 16px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 4px 12px; border-radius: 999px; }
+.tag.lost { color: var(--lost); background: var(--lost-bg); }
+.tag.found { color: var(--found); background: var(--found-bg); }
+.empty { padding: 48px 0; text-align: center; color: var(--text2); grid-column: 1 / -1; }
+.field { display: flex; flex-direction: column; gap: 8px; }
+.facts { display: grid; grid-template-columns: 120px 1fr; gap: 12px 16px; background: var(--surface); border-radius: var(--r-card); padding: 24px; margin: 24px 0 0; font-size: 15px; line-height: 20px; }
+.facts dt { color: var(--text2); }
+.facts dd { margin: 0; }
+.err { color: var(--lost-bg); font-size: 15px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } .pet:hover { transform: none; } }
+.chips input { min-width: 0; }
+@media (max-width: 600px) {
+  .shell { padding-top: 16px; }
+  .chips input { flex-basis: 100%; max-width: none; margin-left: 0; }
+  .nav .end { gap: 12px; }
+  .nav .end > span { display: none; }
+}

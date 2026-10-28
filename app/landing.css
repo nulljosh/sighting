@@ -1,0 +1,121 @@
+/* House landing style, same shape as numen/bookrank: a drifting wall of the
+   app's own content behind a scrim, then features, install, closing.
+   Uses @import of jaybulb.com/tokens.css via globals.css. */
+
+.lp {
+  /* orchard palette */
+  --accent: var(--btn); --accent-ink: var(--btn-ink);
+  --link: var(--clay-deep); --link-hover: var(--text);
+  --accent-soft: color-mix(in srgb, var(--accent) 9%, var(--bg));
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+@media (prefers-color-scheme: dark) { .lp { --link: var(--clay); --accent-soft: color-mix(in srgb, var(--accent) 9%, var(--bg)); } }
+.lp ::selection { background: var(--accent); color: #fff; }
+.lp .container { max-width: 62rem; margin: 0 auto; padding: 0 1.5rem; }
+
+.lp .hero {
+  position: relative; isolation: isolate; overflow: hidden;
+  background: var(--accent-soft); padding: 5.5rem 0 4rem; text-align: center;
+}
+.lp .hero .container { position: relative; z-index: 2; }
+
+/* pinned to the real page edge, not the centered 62rem content column */
+.lp .topbar {
+  position: absolute; top: 0; left: 0; right: 0; z-index: 3;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: 1.25rem 1.5rem;
+}
+
+/* the wall: notices drifting past, the way a board fills up */
+.lp .hero-wall {
+  position: absolute; inset: -8%; z-index: 0;
+  display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 10px;
+  opacity: 0.5; pointer-events: none; user-select: none;
+}
+.lp .wall-col { display: flex; min-width: 0; flex-direction: column; gap: 10px; }
+.lp .wall-col span {
+  display: flex; align-items: baseline; gap: 0.5rem;
+  padding: 0.55rem 0.75rem; background: var(--bg); border: 1px solid var(--border);
+  border-radius: 10px; font-size: 0.85rem; color: var(--text2);
+  white-space: nowrap; overflow: hidden;
+}
+.lp .wall-col span i {
+  font-style: normal; font-size: 0.66rem; font-weight: 700; letter-spacing: 0.04em;
+  text-transform: uppercase; padding: 0.1rem 0.35rem; border-radius: 4px; flex: none;
+}
+.lp .wall-col span i.lost  { color: var(--lost);  background: var(--lost-bg); }
+.lp .wall-col span i.found { color: var(--found); background: var(--found-bg); }
+.lp .wall-col span b { font-weight: 600; color: var(--text); overflow: hidden; text-overflow: ellipsis; }
+.lp .wall-col.up   { animation: wall-up   var(--dur) linear infinite; }
+.lp .wall-col.down { animation: wall-down var(--dur) linear infinite; }
+@keyframes wall-up   { from { transform: translateY(0); }    to { transform: translateY(-50%); } }
+@keyframes wall-down { from { transform: translateY(-50%); } to { transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .lp .wall-col { animation: none; } }
+
+/* scrim: keeps the headline readable over the wall, in either theme */
+.lp .hero::after {
+  content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background:
+    radial-gradient(ellipse 55% 60% at 50% 45%, var(--bg) 20%, transparent 80%),
+    linear-gradient(var(--bg), transparent 30%, transparent 62%, var(--bg) 96%),
+    linear-gradient(90deg, var(--bg), transparent 20%, transparent 80%, var(--bg)),
+    color-mix(in srgb, var(--bg) 50%, transparent);
+}
+.lp .hero-icon { width: 88px; height: 88px; border-radius: 22.5%; margin: 0 auto 1.75rem; display: block; }
+.lp h1 { font-size: clamp(2.25rem, 6.5vw, 3.5rem); font-weight: 700; margin: 0 0 0.85rem; letter-spacing: -0.025em; line-height: 1.08; }
+.lp .hero p { font-size: clamp(1.05rem, 2.4vw, 1.25rem); color: var(--text2); max-width: 34rem; margin: 0 auto; }
+.lp .buttons { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem; }
+.lp .btn { display: inline-flex; align-items: center; min-height: 48px; padding: 0 1.5rem; border-radius: 100px; text-decoration: none; font-weight: 600; font-size: 0.98rem; border: 1.5px solid transparent; transition: transform 0.15s ease, opacity 0.15s ease; }
+.lp .btn:hover { text-decoration: none; transform: translateY(-1px); }
+.lp .btn-primary { background: var(--accent); color: var(--accent-ink); }
+.lp .btn-primary:hover { opacity: 0.9; }
+.lp .btn-outline { border-color: var(--border); color: var(--text); background: var(--bg); }
+.lp .btn-outline:hover { border-color: var(--link); color: var(--link); }
+
+.lp h2 { font-size: clamp(1.5rem, 3.6vw, 2rem); font-weight: 700; text-align: center; margin: 0 0 2.25rem; letter-spacing: -0.02em; }
+.lp .features { padding: 4rem 0; }
+.lp .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1.25rem; }
+.lp .feature { background: var(--bg2); border: 0; border-radius: 28px; padding: 1.5rem; }
+.lp .feature h3 { margin: 0 0 0.4rem; font-size: 1rem; font-weight: 650; }
+.lp .feature p { margin: 0; color: var(--text2); font-size: 0.95rem; }
+.lp .feature a { display: inline-block; margin-top: 0.75rem; font-size: 0.9rem; font-weight: 500; color: var(--link); text-decoration: none; }
+.lp .feature a:hover { text-decoration: underline; }
+
+.lp .recent { padding: 0 0 4rem; }
+.lp .recent ul { list-style: none; margin: 0; padding: 0; border: 1px solid var(--border); border-radius: 20px; overflow: hidden; }
+.lp .recent li + li { border-top: 1px solid var(--border); }
+.lp .recent a { display: flex; align-items: baseline; gap: 0.6rem; padding: 0.7rem 1rem; text-decoration: none; color: var(--text); background: var(--bg2); }
+.lp .recent a:hover { background: var(--accent-soft); }
+
+.lp .recent .tag { position: static; font-size: 0.66rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; padding: 0.1rem 0.35rem; border-radius: 4px; flex: none; }
+.lp .recent .tag.lost  { color: var(--lost);  background: var(--lost-bg); }
+.lp .recent .tag.found { color: var(--found); background: var(--found-bg); }
+.lp .recent .where { margin-left: auto; color: var(--text2); font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lp .recent .meta { color: var(--text2); font-size: 0.9rem; }
+
+.lp .closing { padding: 4rem 0 4.5rem; text-align: center; background: var(--bg2); border-top: 1px solid var(--border); }
+.lp .closing p { color: var(--text2); max-width: 32rem; margin: 0 auto; }
+.lp footer { padding: 2.5rem 0 3.5rem; text-align: center; font-size: 0.9rem; color: var(--text2); }
+.lp .topbar .name { font-weight: 700; }
+.lp .topbar a { color: var(--link); }
+.lp .topbar a:hover { color: var(--link-hover); }
+
+/* Scroll reveal (sections below the fold only, hero is exempt) */
+.lp .reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.lp .reveal.in-view {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lp .reveal { opacity: 1; transform: none; transition: none; }
+}

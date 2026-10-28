@@ -1,0 +1,44 @@
+name: Sighting
+options:
+  bundleIdPrefix: com.nulljosh
+targets:
+  Sighting:
+    type: application
+    supportedDestinations: [iOS, macOS]
+    deploymentTarget:
+      iOS: "17.0"
+      macOS: "14.0"
+    sources:
+      - Sighting
+    entitlements:
+      path: Sighting.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.security.network.client: true
+        com.apple.security.files.user-selected.read-only: true
+        com.apple.developer.applesignin: [Default]
+    info:
+      path: Sighting/Info.plist
+      properties:
+        CFBundleURLTypes:
+          - CFBundleURLSchemes: [sighting]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.nulljosh.homeward
+        DEVELOPMENT_TEAM: QMM486NPYC
+        PRODUCT_NAME: Sighting
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Sighting
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.utilities
+        INFOPLIST_KEY_NSCameraUsageDescription: "To attach a photo of the pet to your listing"
+        INFOPLIST_KEY_NSPhotoLibraryUsageDescription: "To attach a photo of the pet to your listing"
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+    dependencies:
+      - package: Supabase
+packages:
+  Supabase:
+    url: https://github.com/supabase/supabase-swift
+    from: 2.0.0
