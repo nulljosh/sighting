@@ -146,5 +146,5 @@ Skipped: GPS collars, pet sitting, shopping.
 | Step-by-step post flow with photo first | PawBoost, Petco Love Lost | M | open |
 | Alerts for new lost pets near you | PawBoost, Petco Love Lost, Nextdoor | L | open |
 | Printable poster from a listing | PawBoost | M | done 2026-10-28 (web) |
-| Photos on old listings point at a dead storage URL; board now falls back to a paw | - | S | open |
+| Photos on old listings pointed at the lapsed api.heyitsmejosh.com; 4 rows moved to api.jaybulb.com (files were still there) | - | S | done 2026-10-28 |
 | New name: Sighting, after Homeward and Maera | - | S | done 2026-10-28 |
