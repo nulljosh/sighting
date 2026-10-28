@@ -143,7 +143,7 @@ Skipped: GPS collars, pet sitting, shopping.
 | Map on the listing detail (static OSM tiles, old posts geocoded from their text) | PawBoost, Nextdoor | S | done 0.3.0 (web) |
 | New posts save lat/lng (geocoded on post) | PawBoost | S | done 0.3.0 (web + jaybulb-api 7cff238) |
 | Map view of the board (Map button, pins link to listings, places looked up once per device) | PawBoost, Nextdoor | M | done 0.4.0 (web) |
-| Step-by-step post flow with photo first | PawBoost, Petco Love Lost | M | open |
+| Step-by-step post flow with photo first (4 steps, each checks its own fields) | PawBoost, Petco Love Lost | M | done 0.5.0 (web) |
 | Alerts for new lost pets near you | PawBoost, Petco Love Lost, Nextdoor | L | open |
 | Printable poster from a listing | PawBoost | M | done 2026-10-28 (web) |
 | Photos on old listings pointed at the lapsed api.heyitsmejosh.com; 4 rows moved to api.jaybulb.com (files were still there) | - | S | done 2026-10-28 |

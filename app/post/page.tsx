@@ -1,19 +1,43 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { spark, Listing } from "@/lib/spark";
 import { geocode } from "@/lib/geo";
+
+const STEPS = ["Photo", "The pet", "Where and when", "Contact"];
 
 export default function PostListing() {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [photo, setPhoto] = useState<File | null>(null);
   const [editToken, setEditToken] = useState<string | null>(null);
+  const [step, setStep] = useState(0);
+  const [failed, setFailed] = useState(false);
+  const form = useRef<HTMLFormElement>(null);
+
+  // One form, one step on screen at a time. Hidden steps still submit their fields, but the
+  // browser can't point at a hidden invalid field, so the form is noValidate and steps check here.
+  function invalid(i: number) {
+    const fields = form.current!.querySelectorAll("fieldset")[i].querySelectorAll<HTMLInputElement>("input, select, textarea");
+    return [...fields].find((f) => !f.checkValidity());
+  }
+  function next() {
+    const bad = invalid(step);
+    if (bad) return bad.reportValidity();
+    setStep(step + 1);
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (step < STEPS.length - 1) return next(); // Enter on an early step means Next
+    const first = STEPS.findIndex((_, i) => invalid(i));
+    if (first >= 0) {
+      setStep(first);
+      return setTimeout(() => invalid(first)?.reportValidity());
+    }
     setSubmitting(true);
+    setFailed(false);
     const form = new FormData(e.currentTarget);
 
     let photo_url: string | null = null;
@@ -48,6 +72,8 @@ export default function PostListing() {
     setSubmitting(false);
     if (!error && data) {
       setEditToken((data as Listing).edit_token ?? null);
+    } else {
+      setFailed(true);
     }
   }
 
@@ -71,77 +97,57 @@ export default function PostListing() {
   return (
     <div className="shell narrow">
       <h1 style={{ fontSize: 34, lineHeight: "40px", fontWeight: 700, marginBottom: 24 }}>Post a lost or found pet</h1>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-        <label className="field">
-          Type
-          <select name="type" required>
-            <option value="lost">Lost</option>
-            <option value="found">Found</option>
-          </select>
-        </label>
-        <label className="field">
-          Pet name (if known)
-          <input name="pet_name" />
-        </label>
-        <label className="field">
-          Species
-          <input name="species" required placeholder="Cat, dog, ..." />
-        </label>
-        <label className="field">
-          Color / description
-          <input name="color" />
-        </label>
-        <label className="field">
-          Notes (temperament, identifying marks, etc.)
-          <textarea name="description" />
-        </label>
-        <label className="field">
-          Ear tattoo / tag / chip number
-          <input name="tag_number" />
-        </label>
-        <label className="field">
-          Last seen location
-          <input name="last_seen_location" required />
-        </label>
-        <label className="field">
-          Last seen date
-          <input name="last_seen_at" type="date" />
-        </label>
-        <label className="field">
-          Sex
-          <select name="sex">
-            <option value="">Unknown</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
-        </label>
-        <label className="field">
-          Reward (optional)
-          <input name="reward" placeholder="$1000" />
-        </label>
-        <label className="field">
-          Photo
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => setPhoto(e.target.files?.[0] ?? null)}
-           
-          />
-        </label>
-        <label className="field">
-          Contact phone
-          <input name="contact_phone" />
-        </label>
-        <label className="field">
-          Contact email
-          <input name="contact_email" type="email" />
-        </label>
-        <button
-          disabled={submitting}
-          className="btn-solid"
-        >
-          {submitting ? "Posting..." : "Post listing"}
-        </button>
+      <p style={{ color: "var(--text2)", marginBottom: 16 }}>Step {step + 1} of {STEPS.length}: {STEPS[step]}</p>
+      <form ref={form} onSubmit={handleSubmit} className="steps" noValidate>
+        <fieldset hidden={step !== 0}>
+          <div className="chips" role="radiogroup" aria-label="Lost or found">
+            <label className="choice"><input type="radio" name="type" value="lost" defaultChecked /> I lost a pet</label>
+            <label className="choice"><input type="radio" name="type" value="found" /> I found a pet</label>
+          </div>
+          <label className="field">
+            A clear photo helps most
+            <input type="file" accept="image/*" onChange={(e) => setPhoto(e.target.files?.[0] ?? null)} />
+          </label>
+          {photo && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img className="preview" src={URL.createObjectURL(photo)} alt="Your photo" />
+          )}
+        </fieldset>
+
+        <fieldset hidden={step !== 1}>
+          <label className="field">Species<input name="species" required placeholder="Cat, dog, ..." /></label>
+          <label className="field">Pet name (if known)<input name="pet_name" /></label>
+          <label className="field">Color<input name="color" placeholder="Orange tabby, black with white paws" /></label>
+          <label className="field">
+            Sex
+            <select name="sex">
+              <option value="">Unknown</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </label>
+          <label className="field">Ear tattoo, tag or chip number<input name="tag_number" /></label>
+          <label className="field">Notes (temperament, identifying marks)<textarea name="description" /></label>
+        </fieldset>
+
+        <fieldset hidden={step !== 2}>
+          <label className="field">Last seen where<input name="last_seen_location" required placeholder="Street and cross street, city" /></label>
+          <label className="field">Last seen date<input name="last_seen_at" type="date" /></label>
+        </fieldset>
+
+        <fieldset hidden={step !== 3}>
+          <label className="field">Contact phone<input name="contact_phone" type="tel" /></label>
+          <label className="field">Contact email<input name="contact_email" type="email" /></label>
+          <label className="field">Reward (optional)<input name="reward" placeholder="$1000" /></label>
+        </fieldset>
+
+        {failed && <p className="err">Couldn&apos;t post that. Check your connection and try again.</p>}
+        <div className="step-nav">
+          {step > 0 && <button type="button" onClick={() => setStep(step - 1)}>Back</button>}
+          <button type="submit" disabled={submitting} className="btn-solid">
+            {step < STEPS.length - 1 ? "Next" : submitting ? "Posting..." : "Post listing"}
+          </button>
+        </div>
       </form>
     </div>
   );
