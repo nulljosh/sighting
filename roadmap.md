@@ -135,16 +135,16 @@ Skipped: GPS collars, pet sitting, shopping.
 
 | Gap | Who has it | Size | Status |
 |---|---|---|---|
-| House UI: capsule controls, photo-first cards, Lost/Found pill, light and dark | PawBoost, Petco Love Lost | S | done 2026-10-28 (web) |
-| Call and Share right on each card | PawBoost | S | done 2026-10-28 (web) |
-| Species filter chips (built from the species people actually post; sex skipped, most posts leave it blank) | PawBoost, Finding Rover | S | done 0.2.0 (web) |
-| Sort by newest or last seen (distance waits on the map row) | PawBoost | S | done 0.2.0 (web) |
-| Reunited tab (resolved listings, happy endings) | PawBoost | S | done 0.2.0 (web) |
-| Map on the listing detail (static OSM tiles, old posts geocoded from their text) | PawBoost, Nextdoor | S | done 0.3.0 (web) |
+| House UI: capsule controls, photo-first cards, Lost/Found pill, light and dark | PawBoost, Petco Love Lost | S | done 2026-10-28 (web, iOS, macOS) |
+| Call and Share right on each card | PawBoost | S | done 2026-10-28 (web, iOS, macOS) |
+| Species filter chips (built from the species people actually post; sex skipped, most posts leave it blank) | PawBoost, Finding Rover | S | done 0.2.0 (web, iOS, macOS) |
+| Sort by newest or last seen (distance waits on the map row) | PawBoost | S | done 0.2.0 (web, iOS, macOS) |
+| Reunited tab (resolved listings, happy endings) | PawBoost | S | done 0.2.0 (web, iOS, macOS) |
+| Map on the listing detail (static OSM tiles, old posts geocoded from their text) | PawBoost, Nextdoor | S | done 0.3.0 (web, iOS, macOS) |
 | New posts save lat/lng (geocoded on post) | PawBoost | S | done 0.3.0 (web + jaybulb-api 7cff238) |
-| Map view of the board (Map button, pins link to listings, places looked up once per device) | PawBoost, Nextdoor | M | done 0.4.0 (web) |
+| Map view of the board (Map button, pins link to listings, places looked up once per device) | PawBoost, Nextdoor | M | done 0.4.0 (web, iOS, macOS) |
 | Step-by-step post flow with photo first (4 steps, each checks its own fields) | PawBoost, Petco Love Lost | M | done 0.5.0 (web) |
 | Alerts for new lost pets near you | PawBoost, Petco Love Lost, Nextdoor | L | open |
-| Printable poster from a listing | PawBoost | M | done 2026-10-28 (web) |
+| Printable poster from a listing | PawBoost | M | done 2026-10-28 (web, iOS, macOS) |
 | Photos on old listings pointed at the lapsed api.heyitsmejosh.com; 4 rows moved to api.jaybulb.com (files were still there) | - | S | done 2026-10-28 |
 | New name: Sighting, after Homeward and Maera | - | S | done 2026-10-28 |
