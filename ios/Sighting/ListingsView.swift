@@ -1,29 +1,36 @@
+import MapKit
 import SwiftUI
 
 struct ListingsView: View {
     @Environment(ListingStore.self) private var store
 
-    @State private var filter: ListingType?
-    @State private var includeResolved = false
+    @State private var board: Board = .all
+    @State private var kind: String?
+    @State private var byLastSeen = false
+    @State private var showMap = false
     @State private var query = ""
     @State private var selection: Listing?
     @State private var showingPost = false
 
     private var listings: [Listing] {
-        store.visible(type: filter, includeResolved: includeResolved, query: query)
+        store.visible(board: board, kind: kind, query: query, byLastSeen: byLastSeen)
     }
 
     var body: some View {
         NavigationSplitView {
-            List(listings, selection: $selection) { listing in
-                NavigationLink(value: listing) { ListingRow(listing: listing) }
+            Group {
+                if showMap { boardMap } else {
+                    List(listings, selection: $selection) { listing in
+                        NavigationLink(value: listing) { ListingRow(listing: listing) }
+                    }
+                }
             }
             .navigationTitle("Sighting")
             .searchable(text: $query, prompt: "Name, breed, color, tag #, area")
-            .searchScopes($filter) {
-                Text("All").tag(ListingType?.none)
-                ForEach(ListingType.allCases) { Text($0.label).tag(ListingType?.some($0)) }
+            .searchScopes($board) {
+                ForEach(Board.allCases) { Text($0.label).tag($0) }
             }
+            .task(id: showMap) { if showMap { await store.locate(listings) } }
             .refreshable { await store.load() }
             .overlay {
                 if store.listings.isEmpty && !store.loading {
@@ -35,14 +42,20 @@ struct ListingsView: View {
             .toolbar {
                 ToolbarItem {
                     Menu {
-                        Toggle("Show resolved", isOn: $includeResolved)
-                        Picker("Show", selection: $filter) {
-                            Text("All").tag(ListingType?.none)
-                            ForEach(ListingType.allCases) { Text($0.label).tag(ListingType?.some($0)) }
+                        Picker("Pet", selection: $kind) {
+                            Text("Any pet").tag(String?.none)
+                            ForEach(store.kinds, id: \.self) { Text($0.capitalized).tag(String?.some($0)) }
+                        }
+                        Picker("Sort", selection: $byLastSeen) {
+                            Text("Newest posts").tag(false)
+                            Text("Last seen").tag(true)
                         }
                     } label: {
                         Label("Filter", systemImage: "line.3.horizontal.decrease.circle")
                     }
+                }
+                ToolbarItem {
+                    Toggle(isOn: $showMap) { Label("Map", systemImage: "map") }.toggleStyle(.button)
                 }
                 ToolbarItem {
                     Button("Post", systemImage: "plus") { showingPost = true }
@@ -64,6 +77,31 @@ struct ListingsView: View {
             Text(store.errorMessage ?? "")
         }
     }
+
+    /// Every listing with a place, pinned; a pin opens the listing like a row does.
+    private var boardMap: some View {
+        Map {
+            ForEach(listings) { l in
+                if let at = store.spot(for: l) {
+                    Annotation(l.title, coordinate: at) {
+                        Button { selection = l } label: { Pin(listing: l) }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel("\(l.title), \(l.last_seen_location)")
+                    }
+                }
+            }
+        }
+    }
+}
+
+struct Pin: View {
+    let listing: Listing
+    var body: some View {
+        Circle()
+            .fill(listing.status == .resolved ? Color.primary : listing.type == .lost ? Color.red : Color.green)
+            .frame(width: 18, height: 18)
+            .overlay(Circle().stroke(.white, lineWidth: 3))
+    }
 }
 
 struct ListingRow: View {
@@ -77,7 +115,7 @@ struct ListingRow: View {
                     TypeBadge(type: listing.type)
                     Text(listing.title).font(.headline)
                     if listing.status == .resolved {
-                        Text("Resolved").font(.caption2).foregroundStyle(.secondary)
+                        Text("Reunited").font(.caption2).foregroundStyle(.secondary)
                     }
                 }
                 Text(listing.last_seen_location).font(.subheadline).foregroundStyle(.secondary)

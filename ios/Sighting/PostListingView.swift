@@ -90,6 +90,7 @@ struct PostListingView: View {
         var photoURL: String?
         if let photoData { photoURL = await store.uploadPhoto(photoData) }
 
+        let spot = await ListingStore.geocode(lastSeenLocation)
         let ok = await store.post(NewListing(
             type: type.rawValue,
             pet_name: petName.nilIfBlank,
@@ -103,7 +104,9 @@ struct PostListingView: View {
             photo_url: photoURL,
             reward: reward.nilIfBlank,
             sex: sex.nilIfBlank,
-            last_seen_at: lastSeenAt.nilIfBlank
+            last_seen_at: lastSeenAt.nilIfBlank,
+            lat: spot?.latitude,
+            lng: spot?.longitude
         ))
         if ok { dismiss() }
     }

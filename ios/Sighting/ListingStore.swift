@@ -1,3 +1,4 @@
+import CoreLocation
 import Foundation
 import Observation
 
@@ -48,10 +49,17 @@ final class ListingStore {
         }
     }
 
+    /// Your own post resolves with its edit token; anyone signed in can mark a pet reunited
+    /// too (the poster gets an email), same as the web board.
     func resolve(_ listing: Listing) async {
-        guard let token = token(for: listing) else { return }
+        let id = listing.id.uuidString.lowercased()
         do {
-            _ = try await account.call("POST", "/rpc/update_listing", json: ["p_id": listing.id.uuidString.lowercased(), "p_token": token.uuidString.lowercased(), "p_status": "resolved"])
+            if let token = token(for: listing) {
+                _ = try await account.call("POST", "/rpc/update_listing", json: ["p_id": id, "p_token": token.uuidString.lowercased(), "p_status": "resolved"])
+            } else if account.isSignedIn {
+                _ = try await account.call("POST", "/rpc/resolve_listing", json: ["p_id": id], authed: true)
+                _ = try? await account.call("POST", "/functions/notify-found", json: ["listingId": id])
+            } else { return }
             if let i = listings.firstIndex(where: { $0.id == listing.id }) {
                 listings[i].status = .resolved
             }
@@ -72,16 +80,45 @@ final class ListingStore {
         }
     }
 
-    /// Filter by lost/found, resolved-or-not, and a free-text query over the searchable fields.
-    func visible(type: ListingType?, includeResolved: Bool, query: String) -> [Listing] {
+    /// The species people actually post, for the filter.
+    var kinds: [String] { Array(Set(listings.map(\.kind).filter { !$0.isEmpty })).sorted() }
+
+    /// Board tab, species, a free-text query over the searchable fields, then the sort.
+    func visible(board: Board, kind: String?, query: String, byLastSeen: Bool) -> [Listing] {
         let q = query.trimmingCharacters(in: .whitespaces).lowercased()
-        return listings.filter { l in
-            if let type, l.type != type { return false }
-            if !includeResolved && l.status == .resolved { return false }
+        let shown = listings.filter { l in
+            if (board == .reunited) != (l.status == .resolved) { return false }
+            if board == .lost && l.type != .lost || board == .found && l.type != .found { return false }
+            if let kind, l.kind != kind { return false }
             guard !q.isEmpty else { return true }
             return [l.pet_name, l.species, l.color, l.description, l.tag_number, l.last_seen_location]
                 .compactMap { $0?.lowercased() }
                 .contains { $0.contains(q) }
         }
+        return byLastSeen ? shown.sorted { $0.lastSeen > $1.lastSeen } : shown
+    }
+
+    // MARK: Places
+
+    /// Places looked up from their text, for posts that never saved coordinates.
+    private(set) var spots: [String: CLLocationCoordinate2D] = [:]
+
+    func spot(for l: Listing) -> CLLocationCoordinate2D? {
+        if let lat = l.lat, let lng = l.lng { return .init(latitude: lat, longitude: lng) }
+        return spots[l.last_seen_location]
+    }
+
+    /// Apple's geocoder, one place at a time (it throttles bursts). Text with fewer than two
+    /// words ("unknown") is skipped, the same rule as the web.
+    func locate(_ list: [Listing]) async {
+        for place in Set(list.filter { $0.lat == nil }.map(\.last_seen_location)) where spots[place] == nil {
+            if let hit = await Self.geocode(place) { spots[place] = hit }
+        }
+    }
+
+    static func geocode(_ text: String) async -> CLLocationCoordinate2D? {
+        let clean = text.replacingOccurrences(of: #"\(.*?\)"#, with: "", options: .regularExpression)
+        guard clean.split(separator: " ").count >= 2 else { return nil }
+        return try? await CLGeocoder().geocodeAddressString(clean).first?.location?.coordinate
     }
 }

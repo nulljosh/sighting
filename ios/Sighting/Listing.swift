@@ -8,6 +8,13 @@ enum ListingType: String, Codable, CaseIterable, Identifiable {
 
 enum ListingStatus: String, Codable { case active, resolved }
 
+/// The board's tabs, same as the web: Reunited holds resolved listings, the rest hold active ones.
+enum Board: String, CaseIterable, Identifiable {
+    case all, lost, found, reunited
+    var id: String { rawValue }
+    var label: String { rawValue.capitalized }
+}
+
 struct Listing: Codable, Identifiable, Hashable {
     let id: UUID
     let created_at: Date
@@ -31,6 +38,9 @@ struct Listing: Codable, Identifiable, Hashable {
     var edit_token: UUID?
 
     var title: String { pet_name ?? species }
+    var kind: String { species.trimmingCharacters(in: .whitespaces).lowercased() }
+    var shareURL: URL { URL(string: "https://sighting.jaybulb.com/listing?id=\(id.uuidString.lowercased())")! }
+    var lastSeen: Date { last_seen_at.flatMap { try? Date($0, strategy: .iso8601.year().month().day()) } ?? created_at }
 
     static func == (lhs: Listing, rhs: Listing) -> Bool { lhs.id == rhs.id && lhs.status == rhs.status }
     func hash(into hasher: inout Hasher) { hasher.combine(id) }
@@ -50,4 +60,6 @@ struct NewListing: Encodable {
     let reward: String?
     let sex: String?
     let last_seen_at: String?
+    var lat: Double? = nil
+    var lng: Double? = nil
 }

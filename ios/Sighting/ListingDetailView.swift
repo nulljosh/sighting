@@ -1,7 +1,9 @@
+import MapKit
 import SwiftUI
 
 struct ListingDetailView: View {
     @Environment(ListingStore.self) private var store
+    @State private var account = Account.shared
     let listing: Listing
 
     private var current: Listing {
@@ -19,7 +21,7 @@ struct ListingDetailView: View {
                 HStack {
                     TypeBadge(type: current.type)
                     if current.status == .resolved {
-                        Label("Resolved", systemImage: "checkmark.seal.fill").foregroundStyle(.green)
+                        Label("Reunited", systemImage: "checkmark.seal.fill").foregroundStyle(.green)
                     }
                     Spacer()
                     Text(current.created_at, format: .dateTime.month().day().hour().minute())
@@ -37,10 +39,18 @@ struct ListingDetailView: View {
                     row("Notes", current.description)
                 }
 
+                if let at = store.spot(for: current) {
+                    Map(initialPosition: .region(.init(center: at, latitudinalMeters: 1500, longitudinalMeters: 1500))) {
+                        Annotation(current.last_seen_location, coordinate: at) { Pin(listing: current) }
+                    }
+                    .frame(height: 220)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                }
+
                 contact
 
-                if store.token(for: current) != nil && current.status == .active {
-                    Button("Mark as resolved") {
+                if current.status == .active && (store.token(for: current) != nil || account.isSignedIn) {
+                    Button("Mark reunited") {
                         Task { await store.resolve(current) }
                     }
                     .buttonStyle(.borderedProminent)
@@ -50,6 +60,8 @@ struct ListingDetailView: View {
             .frame(maxWidth: 620, alignment: .leading)
         }
         .navigationTitle(current.title)
+        .toolbar { ShareLink(item: current.shareURL, subject: Text("\(current.type.label): \(current.title)")) }
+        .task(id: current.id) { await store.locate([current]) }
     }
 
     @ViewBuilder
