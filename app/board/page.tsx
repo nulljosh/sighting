@@ -5,7 +5,7 @@ import Link from "next/link";
 import { spark, Listing } from "@/lib/spark";
 import AuthBar from "@/lib/AuthBar";
 import MiniMap from "@/lib/MiniMap";
-import { geocodeAll } from "@/lib/geo";
+import { geocode, geocodeAll } from "@/lib/geo";
 
 // Shown when a listing has no photo, or its photo fails to load.
 const PAW = '<svg width="56" height="56" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="6" cy="9" r="2.2"/><circle cx="10" cy="5.5" r="2.2"/><circle cx="14" cy="5.5" r="2.2"/><circle cx="18" cy="9" r="2.2"/><path d="M12 11c-3 0-6 4-6 6.5 0 1.6 1.3 2.5 3 2.5 1.2 0 2-.6 3-.6s1.8.6 3 .6c1.7 0 3-.9 3-2.5C18 15 15 11 12 11z"/></svg>';
@@ -36,6 +36,18 @@ export default function Home() {
     const places = [...new Set(listings.filter((l) => l.lat == null).map((l) => l.last_seen_location))];
     geocodeAll(places, (place, spot) => setSpots((s) => ({ ...s, [place]: spot })));
   }, [showMap, listings]);
+
+  const [alertMsg, setAlertMsg] = useState("");
+  async function subscribe(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = new FormData(e.currentTarget);
+    const place = String(form.get("place"));
+    setAlertMsg("Finding that place...");
+    const spot = await geocode(place);
+    if (!spot) return setAlertMsg("Couldn't find that place. Try a street and city.");
+    const { error } = await spark.rpc("pet_alerts_subscribe", { email: form.get("email"), place, ...spot });
+    setAlertMsg(error ? error.message : "Check your email and tap the link to turn alerts on.");
+  }
 
   async function markFound(id: string) {
     const { data } = await spark.rpc("resolve_listing", { p_id: id }).single();
@@ -110,6 +122,16 @@ export default function Home() {
           <option value="seen">Last seen</option>
         </select>
       </div>
+
+      <details className="alerts">
+        <summary>Get an email when a pet is posted near you</summary>
+        <form onSubmit={subscribe}>
+          <input name="place" required placeholder="Your street and city" aria-label="Place" />
+          <input name="email" type="email" required placeholder="you@example.com" aria-label="Email" />
+          <button className="btn-solid">Send alerts</button>
+        </form>
+        {alertMsg && <p role="status">{alertMsg}</p>}
+      </details>
 
       {showMap && (near.length ? <MiniMap pins={near} /> : <p className="empty">Finding places on the map...</p>)}
 
