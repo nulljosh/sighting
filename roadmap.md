@@ -109,7 +109,6 @@ instead of the board. Both fixed.
 
 ## Left
 - [ ] No ASC record yet for `com.nulljosh.homeward`; nothing submitted.
-- [ ] Native Sign in with Apple in the iOS/Mac app (web OAuth is done).
 - [ ] The Mac icon is the same dark rounded-square art as iOS; a Mac-shaped
   icon would be better but is cosmetic.
 
