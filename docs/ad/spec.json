@@ -1,0 +1,315 @@
+{
+ "out": "sighting-ad.mp4",
+ "size": [
+  1920,
+  1080
+ ],
+ "fps": 30,
+ "font": "fonts/SF-Medium.ttf",
+ "font_bold": "fonts/SF-Bold.ttf",
+ "font_size": 100,
+ "palette": {
+  "paper": "#fdfdfd",
+  "ink": "#121212",
+  "orange": "#e06a0a",
+  "lost": "#c9302c",
+  "found": "#2f8a4e",
+  "sand": "#f2e4d8"
+ },
+ "sky": "ink",
+ "glow": [
+  "paper",
+  "orange"
+ ],
+ "open": {
+  "secs": 1.6
+ },
+ "pool": [
+  {
+   "image": "sighting/d-hero.png",
+   "focus": [
+    0.5,
+    0.78
+   ],
+   "zoom": 1.0,
+   "sky": "paper",
+   "push": 0.0
+  },
+  {
+   "image": "sighting/board-map.png",
+   "focus": [
+    0.38,
+    0.42
+   ],
+   "zoom": 2.4,
+   "sky": "ink"
+  },
+  {
+   "image": "sighting/d-lostcat.png",
+   "focus": [
+    0.5,
+    0.78
+   ],
+   "zoom": 1.0,
+   "sky": "paper",
+   "push": 0.0
+  },
+  {
+   "image": "sighting/listing-light.png",
+   "focus": [
+    0.5,
+    0.3
+   ],
+   "zoom": 2.6,
+   "sky": "ink"
+  },
+  {
+   "image": "sighting/board.png",
+   "focus": [
+    0.15,
+    0.42
+   ],
+   "zoom": 2.6,
+   "sky": "paper"
+  },
+  {
+   "image": "sighting/d-seen.png",
+   "focus": [
+    0.5,
+    0.78
+   ],
+   "zoom": 1.3,
+   "sky": "ink",
+   "push": 0.0
+  },
+  {
+   "image": "sighting/d-post.png",
+   "focus": [
+    0.5,
+    0.78
+   ],
+   "zoom": 1.15,
+   "sky": "paper",
+   "push": 0.0
+  },
+  {
+   "image": "sighting/listing-dark.png",
+   "focus": [
+    0.5,
+    0.3
+   ],
+   "zoom": 2.6,
+   "sky": "ink"
+  },
+  {
+   "image": "sighting/alerts.png",
+   "focus": [
+    0.3,
+    0.27
+   ],
+   "zoom": 2.4,
+   "sky": "paper"
+  },
+  {
+   "image": "sighting/phone-dark.png",
+   "focus": [
+    0.5,
+    0.62
+   ],
+   "zoom": 1.3,
+   "sky": "ink"
+  },
+  {
+   "image": "sighting/d-dog.png",
+   "focus": [
+    0.5,
+    0.45
+   ],
+   "zoom": 1.0,
+   "sky": "paper"
+  },
+  {
+   "image": "sighting/phone-dark.png",
+   "focus": [
+    0.5,
+    0.55
+   ],
+   "zoom": 1.6,
+   "sky": "ink"
+  },
+  {
+   "image": "sighting/d-dog.png",
+   "focus": [
+    0.5,
+    0.45
+   ],
+   "zoom": 1.25,
+   "sky": "paper"
+  },
+  {
+   "fill": "orange",
+   "sky": "ink"
+  },
+  {
+   "image": "sighting/board-map.png",
+   "focus": [
+    0.3,
+    0.4
+   ],
+   "zoom": 3.4,
+   "sky": "ink"
+  },
+  {
+   "fill": "sand",
+   "sky": "ink"
+  },
+  {
+   "image": "sighting/d-dog.png",
+   "focus": [
+    0.5,
+    0.45
+   ],
+   "zoom": 1.5,
+   "sky": "paper"
+  },
+  {
+   "fill": "lost",
+   "sky": "ink"
+  },
+  {
+   "image": "sighting/listing-light.png",
+   "focus": [
+    0.5,
+    0.29
+   ],
+   "zoom": 3.4,
+   "sky": "ink"
+  },
+  {
+   "fill": "found",
+   "sky": "ink"
+  },
+  {
+   "image": "sighting/d-seen.png",
+   "focus": [
+    0.5,
+    0.78
+   ],
+   "zoom": 1.6,
+   "sky": "paper",
+   "push": 0.0
+  },
+  {
+   "fill": "orange",
+   "sky": "ink"
+  },
+  {
+   "image": "sighting/board-map.png",
+   "focus": [
+    0.45,
+    0.44
+   ],
+   "zoom": 3.0,
+   "sky": "ink"
+  },
+  {
+   "fill": "paper",
+   "sky": "ink"
+  },
+  {
+   "image": "sighting/d-lostcat.png",
+   "focus": [
+    0.5,
+    0.78
+   ],
+   "zoom": 1.0,
+   "sky": "ink",
+   "push": 0.0
+  },
+  {
+   "fill": "sand",
+   "sky": "ink"
+  },
+  {
+   "image": "sighting/listing-dark.png",
+   "focus": [
+    0.5,
+    0.29
+   ],
+   "zoom": 3.4,
+   "sky": "paper"
+  },
+  {
+   "fill": "orange",
+   "sky": "ink"
+  },
+  {
+   "image": "sighting/board.png",
+   "focus": [
+    0.15,
+    0.42
+   ],
+   "zoom": 2.6,
+   "sky": "ink"
+  },
+  {
+   "fill": "found",
+   "sky": "ink"
+  },
+  {
+   "image": "sighting/alerts.png",
+   "focus": [
+    0.3,
+    0.27
+   ],
+   "zoom": 3.0,
+   "sky": "paper"
+  },
+  {
+   "fill": "lost",
+   "sky": "ink"
+  },
+  {
+   "image": "sighting/board-map.png",
+   "focus": [
+    0.38,
+    0.42
+   ],
+   "zoom": 2.4,
+   "sky": "ink"
+  },
+  {
+   "fill": "orange",
+   "sky": "ink"
+  }
+ ],
+ "grain": 0.15,
+ "schedule": {
+  "count": 34,
+  "first": 1.05,
+  "last": 0.12
+ },
+ "words": [
+  [
+   12,
+   "Bring"
+  ],
+  [
+   16,
+   "them"
+  ],
+  [
+   18,
+   "home."
+  ]
+ ],
+ "title": {
+  "text": "Sighting",
+  "secs": 1.4
+ },
+ "end": {
+  "mark": "sighting/mark.png",
+  "name": "Sighting",
+  "secs": 3.0
+ }
+}
