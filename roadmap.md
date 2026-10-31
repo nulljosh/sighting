@@ -150,3 +150,7 @@ Skipped: GPS collars, pet sitting, shopping.
 
 ## Ingested 2026-10-30
 - [ ] Needs Hermes' style, QA, and App Store
+
+## Landing pass, 2026-10-30
+
+- [ ] Rebuild the landing in Hermes' style.
