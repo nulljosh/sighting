@@ -147,3 +147,6 @@ Skipped: GPS collars, pet sitting, shopping.
 | Printable poster from a listing | PawBoost | M | done 2026-10-28 (web, iOS, macOS) |
 | Photos on old listings pointed at the lapsed api.heyitsmejosh.com; 4 rows moved to api.jaybulb.com (files were still there) | - | S | done 2026-10-28 |
 | New name: Sighting, after Homeward and Maera | - | S | done 2026-10-28 |
+
+## Ingested 2026-10-30
+- [ ] Needs Hermes' style, QA, and App Store
