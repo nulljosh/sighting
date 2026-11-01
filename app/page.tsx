@@ -234,7 +234,7 @@ export default function Landing() {
           <nav className="foot-cols" aria-label="Footer">
             <div><p className="label">Sighting</p><Link href="/board">Board</Link><Link href="/post">Post a pet</Link><a href="#how">How it works</a></div>
             <div><p className="label">Source</p><a href="https://github.com/nulljosh/sighting">GitHub</a><a href="https://github.com/nulljosh/sighting/releases">Releases</a></div>
-            <div><p className="label">More</p><a href="mailto:trommatic@icloud.com?subject=Sighting">Feedback</a><a href="https://jaybulb.com">More apps</a><a href="#top">Back to top</a></div>
+            <div><p className="label">More</p><a href="mailto:trommatic@icloud.com?subject=Sighting">Feedback</a><a href="/privacy.html">Privacy</a><a href="https://jaybulb.com">More apps</a><a href="#top">Back to top</a></div>
           </nav>
         </div>
         <div className="word-band" aria-hidden="true"><canvas className="word-canvas" /></div>

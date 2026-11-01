@@ -45,7 +45,10 @@ function ListingDetailInner() {
     <div className="shell narrow">
       <div className="no-print" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16 }}>
         <Link href="/board">&larr; Back to the board</Link>
-        <button onClick={() => window.print()}>Print poster</button>
+        <span style={{ display: "flex", gap: 16, alignItems: "center" }}>
+          <a href={`mailto:trommatic@icloud.com?subject=${encodeURIComponent(`Sighting report: ${listing.id}`)}&body=${encodeURIComponent(`What is wrong with this post?\n\nhttps://sighting.jaybulb.com/listing?id=${listing.id}`)}`}>Report</a>
+          <button onClick={() => window.print()}>Print poster</button>
+        </span>
       </div>
 
       {/* The printed page is a pole poster: big word, big photo, big phone number. */}

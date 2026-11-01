@@ -7,10 +7,11 @@ struct ListingsView: View {
     @State private var board: Board = .all
     @State private var kind: String?
     @State private var byLastSeen = false
-    @State private var showMap = false
+    @State private var showMap = UserDefaults.standard.bool(forKey: "shotMap") // -shotMap YES opens on the map, for store screenshots
     @State private var query = ""
     @State private var selection: Listing?
     @State private var showingPost = false
+    @State private var camera: MapCameraPosition = .automatic
 
     private var listings: [Listing] {
         store.visible(board: board, kind: kind, query: query, byLastSeen: byLastSeen)
@@ -62,6 +63,7 @@ struct ListingsView: View {
                 }
                 ToolbarItem { AuthBar() }
             }
+            .navigationSplitViewColumnWidth(min: 300, ideal: 360) // the Mac let it collapse to a sliver
         } detail: {
             if let selection {
                 ListingDetailView(listing: selection)
@@ -71,6 +73,9 @@ struct ListingsView: View {
         }
         .sheet(isPresented: $showingPost) { PostListingView() }
         .task { if store.listings.isEmpty { await store.load() } }
+        // -shotSelect YES opens the newest post, for store screenshots.
+        .onChange(of: store.listings.count) { if selection == nil && UserDefaults.standard.bool(forKey: "shotSelect") { selection = listings.first } }
+        .onChange(of: store.hidden) { if let s = selection, store.isHidden(s) { selection = nil } }
         .alert("Something went wrong", isPresented: .constant(store.errorMessage != nil)) {
             Button("OK") { store.errorMessage = nil }
         } message: {
@@ -80,7 +85,7 @@ struct ListingsView: View {
 
     /// Every listing with a place, pinned; a pin opens the listing like a row does.
     private var boardMap: some View {
-        Map {
+        Map(position: $camera) {
             ForEach(listings) { l in
                 if let at = store.spot(for: l) {
                     Annotation(l.title, coordinate: at) {
@@ -91,6 +96,21 @@ struct ListingsView: View {
                 }
             }
         }
+        // Places geocode one by one; refit as each lands so the map frames every pin, not just the first.
+        .onChange(of: store.spots.count) { fit() }
+        .onAppear { fit() }
+        .onChange(of: listings.count) { fit() }
+    }
+
+    /// Frames every located pin with some margin; .automatic only framed the first place to land.
+    private func fit() {
+        let pts = listings.compactMap { store.spot(for: $0) }.map(MKMapPoint.init)
+        guard let first = pts.first else { return }
+        let rect = pts.dropFirst().reduce(MKMapRect(origin: first, size: .init(width: 0, height: 0))) {
+            $0.union(MKMapRect(origin: $1, size: .init(width: 0, height: 0)))
+        }
+        let pad = max(rect.width, rect.height * 0.5, 40_000) * 0.4 // map points, ~6.7 per metre here: never closer than a few km
+        camera = .rect(rect.insetBy(dx: -pad, dy: -pad))
     }
 }
 

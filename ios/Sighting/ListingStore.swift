@@ -22,6 +22,19 @@ final class ListingStore {
         UserDefaults.standard.set(myTokens, forKey: "editTokens")
     }
 
+    /// Posts and posters hidden on this device (App Review 1.2: hide and block for public posts).
+    private(set) var hidden: Set<String> = Set(UserDefaults.standard.stringArray(forKey: "hiddenListings") ?? [])
+
+    func isHidden(_ l: Listing) -> Bool {
+        hidden.contains(l.id.uuidString) || l.user_id.map { hidden.contains("user:" + $0) } == true
+    }
+
+    /// Hides one post, or every post by its poster when they were signed in.
+    func hide(_ l: Listing, poster: Bool) {
+        hidden.insert(poster ? "user:" + (l.user_id ?? "") : l.id.uuidString)
+        UserDefaults.standard.set(Array(hidden), forKey: "hiddenListings")
+    }
+
     func load() async {
         loading = true
         defer { loading = false }
@@ -87,6 +100,7 @@ final class ListingStore {
     func visible(board: Board, kind: String?, query: String, byLastSeen: Bool) -> [Listing] {
         let q = query.trimmingCharacters(in: .whitespaces).lowercased()
         let shown = listings.filter { l in
+            if isHidden(l) { return false }
             if (board == .reunited) != (l.status == .resolved) { return false }
             if board == .lost && l.type != .lost || board == .found && l.type != .found { return false }
             if let kind, l.kind != kind { return false }

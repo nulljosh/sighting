@@ -3,6 +3,7 @@ import SwiftUI
 
 struct ListingDetailView: View {
     @Environment(ListingStore.self) private var store
+    @Environment(\.dismiss) private var dismiss
     @State private var account = Account.shared
     let listing: Listing
 
@@ -60,8 +61,25 @@ struct ListingDetailView: View {
             .frame(maxWidth: 620, alignment: .leading)
         }
         .navigationTitle(current.title)
-        .toolbar { ShareLink(item: current.shareURL, subject: Text("\(current.type.label): \(current.title)")) }
+        .toolbar {
+            ShareLink(item: current.shareURL, subject: Text("\(current.type.label): \(current.title)"))
+            Menu {
+                if let url = reportURL { Link(destination: url) { Label("Report post", systemImage: "flag") } }
+                Button("Hide post", systemImage: "eye.slash") { store.hide(current, poster: false); dismiss() }
+                if current.user_id != nil {
+                    Button("Block poster", systemImage: "hand.raised", role: .destructive) { store.hide(current, poster: true); dismiss() }
+                }
+            } label: { Label("More", systemImage: "ellipsis.circle") }
+        }
         .task(id: current.id) { await store.locate([current]) }
+    }
+
+    /// Reports go to a person who reads them and removes posts that break the rules within a day.
+    private var reportURL: URL? {
+        var c = URLComponents(string: "mailto:trommatic@icloud.com")
+        c?.queryItems = [.init(name: "subject", value: "Sighting report: \(current.id.uuidString.lowercased())"),
+                         .init(name: "body", value: "What is wrong with this post?\n\n\(current.shareURL.absoluteString)")]
+        return c?.url
     }
 
     @ViewBuilder

@@ -34,6 +34,8 @@ struct Listing: Codable, Identifiable, Hashable {
     let sex: String?
     let last_seen_at: String?
     var status: ListingStatus
+    /// Set when the poster was signed in; lets "Block poster" hide all their posts.
+    let user_id: String?
     /// Only present on the row returned by your own insert; nil for other people's listings.
     var edit_token: UUID?
 

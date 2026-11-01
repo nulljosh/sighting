@@ -9,3 +9,6 @@ kmp/*/build/
 kmp/local.properties
 .build/
 *.tsbuildinfo
+.asc/artifacts/
+.asc/shots/
+.asc/reports/

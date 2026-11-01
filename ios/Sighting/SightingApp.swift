@@ -12,6 +12,9 @@ struct SightingApp: App {
                 .frame(minWidth: 800, minHeight: 500)
                 #endif
         }
+        #if os(macOS)
+        .defaultSize(width: 1280, height: 800)
+        #endif
         .commands {
             CommandGroup(after: .newItem) {
                 Button("Refresh") {

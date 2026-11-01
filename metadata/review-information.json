@@ -1,0 +1,8 @@
+{
+ "contactFirstName": "Joshua",
+ "contactLastName": "Trommel",
+ "contactEmail": "trommatic@icloud.com",
+ "contactPhone": "+1 778 201 4533",
+ "demoAccountRequired": false,
+ "notes": "Sign-in is optional. Anyone can browse the board and post a lost or found pet without an account; each post returns a private edit link. Posts are public user content. Every post has a menu (the ... button on a post) with Report post (emails the developer, who removes posts that break the rules within 24 hours), Hide post, and Block poster (hides all posts from that signed-in poster on this device). Account deletion is in the account screen."
+}
