@@ -116,11 +116,7 @@ instead of the board. Both fixed.
 - [ ] Signed release APK + a keystore, then a Play listing.
 - [ ] Posting from the native apps (photo upload + edit-token round trip); it
       currently deep-links to the web form.
-- [ ] CI run 33364105059 was still building the MSI/DEB/APK when the session
-      ended (cold runners, first Gradle download). Check it, and note the
-      workflow only uploads Actions artifacts, which need a login to download.
-      For public download links it needs a release step and a
-      `homeward-native-v*` tag.
+- [ ] (blocked 11-01: pushing the tag creates a public GitHub release, which Claude Code refuses without an allow rule) Public MSI/DEB/APK downloads. The old labs run built all three green; `.github/workflows/native-release.yml` now builds them here and attaches them to a release on a `native-v*` tag. Desktop compile and the debug APK pass locally on JDK 17. To ship: `git tag native-v1.0.0 && git push origin native-v1.0.0`.
 
 ## TUI pilot (2026-09-05)
 - `sighting-tui` SwiftPM target (SwiftTUI). `swift build && ./.build/debug/sighting-tui` lists active listings via plain URLSession against Supabase PostgREST (anon key, RLS-guarded, public by design — no Supabase SDK dependency pulled in for one read). Needs a real TTY.
