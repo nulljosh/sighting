@@ -13,6 +13,7 @@
 		44A4A84749A989077EFB07BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 79CAB71F635BCB5BC2B66DBA /* Assets.xcassets */; };
 		4F23A057A1BF7EACBD16665A /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA59955093DC0E6232C58C0F /* API.swift */; };
 		8BDCF8D081048B83C9358DF6 /* ListingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E8C52E2E1C9AB2684FB4A2 /* ListingDetailView.swift */; };
+		8F4DEE5CBFC8B9A7FAB7D26E /* Sighting.icon in Resources */ = {isa = PBXBuildFile; fileRef = F638B5BE82889F95E4475751 /* Sighting.icon */; };
 		B4136427ABA5FFA1C8673D93 /* PostListingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1D18159747055D797E70311 /* PostListingView.swift */; };
 		C108A17A87F6D4706CC6E93A /* SightingApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297E46F7362F0F55A3BCDF2F /* SightingApp.swift */; };
 		C557360BA6817684093B7800 /* Listing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 565962F74070C36AE353DB1B /* Listing.swift */; };
@@ -29,6 +30,7 @@
 		AA59955093DC0E6232C58C0F /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		CA8E57B2105CB13DF0A5F1CF /* ListingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingsView.swift; sourceTree = "<group>"; };
 		F1D18159747055D797E70311 /* PostListingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostListingView.swift; sourceTree = "<group>"; };
+		F638B5BE82889F95E4475751 /* Sighting.icon */ = {isa = PBXFileReference; lastKnownFileType = wrapper.icon; path = Sighting.icon; sourceTree = "<group>"; };
 		F8E8C52E2E1C9AB2684FB4A2 /* ListingDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -37,6 +39,7 @@
 			isa = PBXGroup;
 			children = (
 				9760002BAEB823D454EC7668 /* Sighting */,
+				E15F5CA16512F4C7644E91E9 /* sighting */,
 				B4945DE5C6B9E79F30750A6E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -64,6 +67,15 @@
 				842D2026C228BB8A274013B7 /* Sighting.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		E15F5CA16512F4C7644E91E9 /* sighting */ = {
+			isa = PBXGroup;
+			children = (
+				F638B5BE82889F95E4475751 /* Sighting.icon */,
+			);
+			name = sighting;
+			path = ..;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -126,6 +138,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				44A4A84749A989077EFB07BE /* Assets.xcassets in Resources */,
+				8F4DEE5CBFC8B9A7FAB7D26E /* Sighting.icon in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -217,7 +230,7 @@
 		5DC981B0E2920BCAC058D870 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = Sighting;
 				CODE_SIGN_ENTITLEMENTS = Sighting.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
@@ -305,7 +318,7 @@
 		B78E93A806D142672A6CD2DB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = Sighting;
 				CODE_SIGN_ENTITLEMENTS = Sighting.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;

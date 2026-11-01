@@ -109,8 +109,6 @@ instead of the board. Both fixed.
 
 ## Left
 - [ ] No ASC record yet for `com.nulljosh.homeward`; nothing submitted.
-- [ ] The Mac icon is the same dark rounded-square art as iOS; a Mac-shaped
-  icon would be better but is cosmetic.
 
 ## Native Windows/Linux/Android (started 2026-08-30)
 - [ ] Signed release APK + a keystore, then a Play listing.

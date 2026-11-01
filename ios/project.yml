@@ -12,6 +12,7 @@ targets:
     supportedDestinations: [iOS, macOS]
     sources:
       - Sighting
+      - path: ../Sighting.icon
     entitlements:
       path: Sighting.entitlements
       properties:
@@ -29,7 +30,7 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.nulljosh.homeward
         DEVELOPMENT_TEAM: QMM486NPYC
         PRODUCT_NAME: Sighting
-        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_APPICON_NAME: Sighting
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: Sighting
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.utilities
