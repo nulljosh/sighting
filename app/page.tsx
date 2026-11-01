@@ -118,6 +118,7 @@ export default function Landing() {
         </div>
       </header>
 
+      <main>
       <section className="hero">
         <HeroWall notices={notices} />
         <div className="wrap center hero-copy">
@@ -181,6 +182,8 @@ export default function Landing() {
           <div className="prod reveal"><p className="label">Android, Windows, Linux</p><h3>A real app</h3><p>One Kotlin codebase built into an APK, an MSI and a DEB.</p><a href="https://github.com/nulljosh/sighting/releases/latest" target="_blank" rel="noopener">Download from GitHub</a></div>
         </div>
       </section>
+
+      </main>
 
       <footer className="foot">
         <div className="foot-top">
