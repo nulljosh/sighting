@@ -108,7 +108,6 @@ icon, and `start_url` pointed at `/`, so an installed app opened the pitch
 instead of the board. Both fixed.
 
 ## Left
-- [ ] No ASC record yet for `com.nulljosh.homeward`; nothing submitted.
 
 ## Native Windows/Linux/Android (started 2026-08-30)
 - [ ] Signed release APK + a keystore, then a Play listing.
@@ -143,7 +142,6 @@ Skipped: GPS collars, pet sitting, shopping.
 | New name: Sighting, after Homeward and Maera | - | S | done 2026-10-28 |
 
 ## Ingested 2026-10-30
-- [ ] (11-01: style done, see Landing pass below; QA and the App Store record still open, no ASC record yet) Needs Hermes' style, QA, and App Store
 
 ## Landing pass, 2026-10-30
 

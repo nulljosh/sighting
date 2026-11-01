@@ -2,7 +2,7 @@
 
 Lost/found pet board: Next.js static web app + SwiftUI iOS/macOS app sharing one backend. Auth is optional everywhere: posts are public and editable via a UUID `edit_token` link generated at post time whether or not you're signed in; signing in (email/password, Apple, or Google) just sets `user_id` on new posts so they can be edited without the token.
 
-Live at sighting.jaybulb.com (Cloudflare Pages project `homeward`; old hosts homeward. and pets.jaybulb.com still serve). Deploy: `npm run build && env -u CLOUDFLARE_API_TOKEN npx wrangler pages deploy out --project-name homeward --branch main`. Backend is the shared `jaybulb-api` Worker (D1); `lib/spark-client.js` mirrors the old Supabase client API, and the listing RPCs (`create_listing`, `resolve_listing`, `update_listing`, `listing_by_token`) live in `jaybulb-api/src/index.js`. A backend change needs its own `wrangler deploy` from that repo.
+App Store: ASC 6829546358 (iOS, iPad and Mac, 1.0 submitted 2026-11-01; ship by archiving `ios/` per platform and exporting with `ios/ExportOptions.plist`, metadata in `metadata/`). Live at sighting.jaybulb.com (Cloudflare Pages project `homeward`; old hosts homeward. and pets.jaybulb.com still serve). Deploy: `npm run build && env -u CLOUDFLARE_API_TOKEN npx wrangler pages deploy out --project-name homeward --branch main`. Backend is the shared `jaybulb-api` Worker (D1); `lib/spark-client.js` mirrors the old Supabase client API, and the listing RPCs (`create_listing`, `resolve_listing`, `update_listing`, `listing_by_token`) live in `jaybulb-api/src/index.js`. A backend change needs its own `wrangler deploy` from that repo.
 
 ## Key files
 - `lib/spark.ts`: API client + `Listing` type, shared by all pages
