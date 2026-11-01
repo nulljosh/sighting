@@ -10,51 +10,70 @@ import "./landing.css";
 // The house layout Hermes set (cyllene/landing): sticky nav, giant headline over the live board, a full-bleed
 // band of cells, the board itself, platforms, and a footer band of Sighting's own things cut like an engraving.
 
-type Notice = [string, string, string];
+// One card per real listing, the way the board shows it: photo, lost or found, name, where. Cards swap to the next
+// listing every few seconds; with fewer listings than cards, the wall shrinks so nothing shows twice.
+type Card = { type: string; what: string; where: string; photo: string | null; when: string };
 
-// Shown only until the board answers, or if it is empty. The first three are the real neighbourhood cases
-// the board was seeded with.
-const FALLBACK: Notice[] = [
-  ["lost", "Oakley, siamese", "203 St & 54A Ave, Langley"],
-  ["lost", "Cali, calico", "Portage Park, Langley"],
-  ["lost", "grey cat", "Langley"],
+// Shown only until the board answers, or if it is empty: the real neighbourhood cases the board was seeded with.
+const FALLBACK: Card[] = [
+  { type: "lost", what: "Oakley, siamese", where: "203 St & 54A Ave, Langley", photo: null, when: "" },
+  { type: "lost", what: "Cali, calico", where: "Portage Park, Langley", photo: null, when: "" },
+  { type: "lost", what: "grey cat", where: "Langley", photo: null, when: "" },
 ];
 
-function notice(l: Listing): Notice {
+const ago = (iso: string) => {
+  const h = Math.max(1, Math.round((Date.now() - new Date(iso).getTime()) / 3600000));
+  return h < 48 ? `${h}h ago` : `${Math.round(h / 24)}d ago`;
+};
+
+function card(l: Listing): Card {
   const what = l.pet_name ? `${l.pet_name}, ${l.species}` : [l.color, l.species].filter(Boolean).join(" ");
-  return [l.status === "resolved" ? "home" : l.type, what, l.last_seen_location];
+  return { type: l.status === "resolved" ? "home" : l.type, what, where: l.last_seen_location, photo: l.photo_url, when: ago(l.created_at) };
 }
 
-// The demo behind the hero: the board's own notices drifting up and down, faded under the copy.
-function HeroWall({ notices }: { notices: Notice[] }) {
+const PAW = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="6" cy="9" r="2.2"/><circle cx="10" cy="5.5" r="2.2"/><circle cx="14" cy="5.5" r="2.2"/><circle cx="18" cy="9" r="2.2"/><path d="M12 11c-3 0-6 4-6 6.5 0 1.6 1.3 2.5 3 2.5 1.2 0 2-.6 3-.6s1.8.6 3 .6c1.7 0 3-.9 3-2.5C18 15 15 11 12 11z"/></svg>';
+
+// The demo behind the hero: the board itself, blended under the copy. Strangers' text, so textContent only.
+function HeroWall({ cards }: { cards: Card[] }) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const wall = ref.current;
-    if (!wall || !notices.length) return;
+    if (!wall || !cards.length) return;
     wall.replaceChildren();
-    const cols = Math.max(3, Math.min(7, Math.ceil(window.innerWidth / 220)));
-    for (let c = 0; c < cols; c++) {
-      const col = document.createElement("div");
-      col.className = `wall-col ${c % 2 ? "down" : "up"}`;
-      col.style.setProperty("--dur", `${70 + c * 11}s`);
-      const slice: Notice[] = [];
-      for (let i = 0; i < 8; i++) slice.push(notices[(c * 5 + i * 3) % notices.length]);
-      for (const [type, what, where] of [...slice, ...slice]) { // doubled, so the loop is seamless
-        const el = document.createElement("span");
-        const tag = document.createElement("i");
-        tag.className = type;
-        tag.textContent = type;
-        const name = document.createElement("b");
-        name.textContent = what;
-        const place = document.createElement("em");
-        place.textContent = where;
-        el.append(tag, name, place);
-        col.appendChild(el);
+    const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const want = innerWidth <= 560 ? 4 : innerWidth <= 900 ? 6 : 8;
+    const n = Math.min(want, cards.length);
+    const timers: number[] = [];
+    for (let i = 0; i < n; i++) {
+      const el = document.createElement("article");
+      el.className = "hc";
+      wall.appendChild(el);
+      let k = i;
+      const fill = () => {
+        const c = cards[k % cards.length];
+        k += n;
+        el.replaceChildren();
+        if (c.photo) {
+          const img = document.createElement("img");
+          img.src = c.photo; img.alt = ""; img.decoding = "async";
+          img.onerror = () => { const d = document.createElement("div"); d.className = "hc-ph"; d.innerHTML = PAW; img.replaceWith(d); };
+          el.appendChild(img);
+        } else { const d = document.createElement("div"); d.className = "hc-ph"; d.innerHTML = PAW; el.appendChild(d); }
+        const meta = document.createElement("div"); meta.className = "hc-m";
+        const tag = document.createElement("i"); tag.className = c.type; tag.textContent = c.type;
+        const name = document.createElement("b"); name.textContent = c.what;
+        const where = document.createElement("span"); where.textContent = [c.where, c.when].filter(Boolean).join(" · ");
+        meta.append(tag, name, where); el.appendChild(meta);
+      };
+      fill();
+      if (!still && cards.length > n) {
+        const swap = () => { el.classList.add("out"); timers.push(window.setTimeout(() => { fill(); el.classList.remove("out"); }, 400)); };
+        timers.push(window.setInterval(swap, 5200 + i * 700));
       }
-      wall.appendChild(col);
     }
-  }, [notices]);
+    return () => timers.forEach((t) => { clearTimeout(t); clearInterval(t); });
+  }, [cards]);
 
   return <div className="hero-wall" ref={ref} aria-hidden="true" />;
 }
@@ -70,7 +89,7 @@ const CELLS: [string, string, string][] = [
 
 export default function Landing() {
   const [recent, setRecent] = useState<Listing[]>([]);
-  const [notices, setNotices] = useState<Notice[]>(FALLBACK);
+  const [cards, setCards] = useState<Card[]>(FALLBACK);
 
   useEffect(() => {
     spark
@@ -83,8 +102,31 @@ export default function Landing() {
         // Test rows stay on the board for QA, never on the landing.
         const real = rows.filter((l) => !/\btest\b/i.test(`${l.pet_name ?? ""} ${l.last_seen_location}`));
         setRecent(real.filter((l) => l.status === "active").slice(0, 5));
-        if (real.length) setNotices(real.map(notice));
+        // one card per pet (the board can hold two posts for the same one), photos first
+        const seen = new Set<string>();
+        const uniq = real.map(card).filter((c) => !seen.has(c.what.toLowerCase()) && seen.add(c.what.toLowerCase()));
+        if (uniq.length) setCards(uniq.sort((a, b) => Number(!!b.photo) - Number(!!a.photo)));
       });
+  }, []);
+
+  // Parallax: the board drifts at 0.45, the copy lifts at 0.2 and fades. Off under reduced motion.
+  useEffect(() => {
+    const bg = document.querySelector<HTMLElement>(".lp .hero-bg"), copy = document.querySelector<HTMLElement>(".lp .hero-copy");
+    if (!bg || !copy || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let t = 0;
+    const on = () => {
+      if (t) return;
+      t = requestAnimationFrame(() => {
+        t = 0;
+        const y = scrollY, h = innerHeight;
+        if (y > h * 1.2) return;
+        bg.style.setProperty("--py", `${y * 0.45}px`);
+        copy.style.transform = `translate3d(0, ${y * 0.2}px, 0)`;
+        copy.style.opacity = String(Math.max(0, 1 - y / (h * 0.7)));
+      });
+    };
+    addEventListener("scroll", on, { passive: true });
+    return () => { removeEventListener("scroll", on); cancelAnimationFrame(t); };
   }, []);
 
   // Fade sections up as they scroll in; everything is visible without JS or with reduced motion.
@@ -120,7 +162,7 @@ export default function Landing() {
 
       <main>
       <section className="hero">
-        <HeroWall notices={notices} />
+        <div className="hero-bg" aria-hidden="true"><HeroWall cards={cards} /></div>
         <div className="wrap center hero-copy">
           <p className="label">Lost and found pets</p>
           <h1>Bring them home.</h1>
