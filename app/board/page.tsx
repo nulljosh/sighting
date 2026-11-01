@@ -96,6 +96,8 @@ export default function Home() {
         </div>
       </header>
 
+      <main>
+      <h1 className="sr-only">Lost and found pets</h1>
       <div className="chips">
         {(["all", "lost", "found", "reunited"] as const).map((f) => (
           <button key={f} onClick={() => setTab(f)} aria-pressed={tab === f}>
@@ -161,6 +163,7 @@ export default function Home() {
         ))}
         {filtered.length === 0 && <li className="empty">{tab === "reunited" ? "No reunions yet." : query || species ? "Nothing matches." : "No listings yet."}</li>}
       </ul>
+      </main>
     </div>
   );
 }

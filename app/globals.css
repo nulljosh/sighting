@@ -39,7 +39,8 @@
     --text: #f3f1ed;
     --text2: #a8a49c;
     --text3: #6f6b64;
-    --lost-bg: #d9534f;
+    --lost-bg: #c9302c; /* #d9534f was 4:1 under the white tag text */
+    --err: #ff8a80;     /* error text sits on the dark page, so it needs the lighter red */
     --found-bg: #3a9d5d;
   }
 }
@@ -138,7 +139,7 @@ h1 { letter-spacing: -.01em; }
 .facts { display: grid; grid-template-columns: 120px 1fr; gap: 12px 16px; background: var(--surface); border-radius: var(--r-card); padding: 24px; margin: 24px 0 0; font-size: 15px; line-height: 20px; }
 .facts dt { color: var(--text2); }
 .facts dd { margin: 0; }
-.err { color: var(--lost-bg); font-size: 15px; }
+.err { color: var(--err, var(--lost-bg)); font-size: 15px; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } .pet:hover { transform: none; } }
 .chips input { min-width: 0; }
 @media (max-width: 600px) {
@@ -171,3 +172,6 @@ h1 { letter-spacing: -.01em; }
   .poster-phone { font-size: 56px; font-weight: 800; margin-top: 16px !important; letter-spacing: .02em; }
   .poster-url { font-size: 14px; margin-top: 12px !important; color: #444; }
 }
+
+/* visually hidden, still read aloud */
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
