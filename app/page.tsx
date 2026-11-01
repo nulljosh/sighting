@@ -1,87 +1,45 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState, type RefObject } from "react";
+import Script from "next/script";
+import { useEffect, useRef, useState } from "react";
 import { spark, Listing } from "@/lib/spark";
 import AuthBar from "@/lib/AuthBar";
 import "./landing.css";
 
-const prefersReducedMotion = () =>
-  typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+// The house layout Hermes set (cyllene/landing): sticky nav, giant headline over the live board, a full-bleed
+// band of cells, the board itself, platforms, and a footer band of Sighting's own things cut like an engraving.
 
-// Reveals a section once it scrolls into view; always visible under reduced motion.
-function useRevealOnScroll<T extends HTMLElement>() {
-  const ref = useRef<T>(null);
-  const [inView, setInView] = useState(prefersReducedMotion());
+type Notice = [string, string, string];
 
-  useEffect(() => {
-    if (prefersReducedMotion() || !ref.current || !("IntersectionObserver" in window)) return;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true);
-          io.unobserve(entry.target);
-        }
-      },
-      { threshold: 0.15 }
-    );
-    io.observe(ref.current);
-    return () => io.disconnect();
-  }, []);
-
-  return [ref, inView] as const;
-}
-
-// Modelled on the real posters seeded on the board — the first three are the
-// actual neighbourhood cases, the rest is generic filler so the wall stays full.
-const SAMPLES: [string, string, string][] = [
+// Shown only until the board answers, or if it is empty. The first three are the real neighbourhood cases
+// the board was seeded with.
+const FALLBACK: Notice[] = [
   ["lost", "Oakley, siamese", "203 St & 54A Ave, Langley"],
   ["lost", "Cali, calico", "Portage Park, Langley"],
   ["lost", "grey cat", "Langley"],
-  ["found", "black lab", "Trout Lake"],
-  ["lost", "grey whippet", "Kits Beach"],
-  ["found", "orange tabby", "Mount Pleasant"],
-  ["lost", "border collie", "Queen Elizabeth Park"],
-  ["found", "budgie", "Main & 24th"],
-  ["lost", "tortoiseshell cat", "Strathcona"],
-  ["found", "shih tzu", "Stanley Park seawall"],
-  ["lost", "husky mix", "Burnaby Heights"],
-  ["found", "white rabbit", "Jericho"],
-  ["lost", "ginger kitten", "Fraser & King Ed"],
-  ["found", "beagle", "New Westminster Quay"],
-  ["lost", "tabby cat", "Commercial Drive"],
-  ["found", "corgi", "Olympic Village"],
-  ["lost", "grey parrot", "Gastown"],
-  ["found", "tuxedo cat", "Renfrew"],
-  ["lost", "jack russell", "Deep Cove"],
-  ["found", "german shepherd", "Central Park"],
-  ["lost", "ragdoll cat", "Yaletown"],
-  ["found", "cockatiel", "Kerrisdale"],
-  ["lost", "dachshund", "Coal Harbour"],
-  ["found", "calico cat", "Hastings-Sunrise"],
 ];
 
-function HeroWall({ parallaxRef }: { parallaxRef: RefObject<HTMLDivElement | null> }) {
+function notice(l: Listing): Notice {
+  const what = l.pet_name ? `${l.pet_name}, ${l.species}` : [l.color, l.species].filter(Boolean).join(" ");
+  return [l.status === "resolved" ? "home" : l.type, what, l.last_seen_location];
+}
+
+// The demo behind the hero: the board's own notices drifting up and down, faded under the copy.
+function HeroWall({ notices }: { notices: Notice[] }) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const wall = ref.current;
-    if (!wall) return;
+    if (!wall || !notices.length) return;
     wall.replaceChildren();
-
-    const items = [...SAMPLES];
-    for (let i = items.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1)); // shuffle, so the wall differs each visit
-      [items[i], items[j]] = [items[j], items[i]];
-    }
-
     const cols = Math.max(3, Math.min(7, Math.ceil(window.innerWidth / 220)));
-    const per = Math.max(4, Math.floor(items.length / cols));
     for (let c = 0; c < cols; c++) {
       const col = document.createElement("div");
       col.className = `wall-col ${c % 2 ? "down" : "up"}`;
       col.style.setProperty("--dur", `${70 + c * 11}s`);
-      const slice = items.slice(c * per, (c + 1) * per);
+      const slice: Notice[] = [];
+      for (let i = 0; i < 8; i++) slice.push(notices[(c * 5 + i * 3) % notices.length]);
       for (const [type, what, where] of [...slice, ...slice]) { // doubled, so the loop is seamless
         const el = document.createElement("span");
         const tag = document.createElement("i");
@@ -89,168 +47,155 @@ function HeroWall({ parallaxRef }: { parallaxRef: RefObject<HTMLDivElement | nul
         tag.textContent = type;
         const name = document.createElement("b");
         name.textContent = what;
-        el.append(tag, name, document.createTextNode(where));
+        const place = document.createElement("em");
+        place.textContent = where;
+        el.append(tag, name, place);
         col.appendChild(el);
       }
       wall.appendChild(col);
     }
-  }, []);
+  }, [notices]);
 
-  return (
-    <div ref={parallaxRef} aria-hidden="true">
-      <div className="hero-wall" ref={ref} />
-    </div>
-  );
+  return <div className="hero-wall" ref={ref} aria-hidden="true" />;
 }
+
+const CELLS: [string, string, string][] = [
+  ["Post", "No account needed", "Post in under a minute when every minute counts. Nothing to sign up for."],
+  ["Edit link", "Only you can close it", "You get a private link nobody else has. Change the listing or mark them home from it."],
+  ["Search", "A board, not a feed", "Filter lost from found, search by name, species, colour, tag or chip. Nothing scrolls away."],
+  ["Map", "Where they were seen", "Every sighting is a pin, so a neighbour two streets over sees it first."],
+  ["Poster", "Print it for the pole", "Each listing prints as a poster: the photo, your phone number and the link back to the page."],
+  ["Reunited", "Home is the point", "Closed listings move to Reunited, so the board shows what is still out there."],
+];
 
 export default function Landing() {
   const [recent, setRecent] = useState<Listing[]>([]);
-  const wallRef = useRef<HTMLDivElement>(null);
-  const [recentRef, recentIn] = useRevealOnScroll<HTMLElement>();
-  const [featuresRef, featuresIn] = useRevealOnScroll<HTMLElement>();
-  const [installRef, installIn] = useRevealOnScroll<HTMLElement>();
-  const [closingRef, closingIn] = useRevealOnScroll<HTMLElement>();
+  const [notices, setNotices] = useState<Notice[]>(FALLBACK);
 
   useEffect(() => {
     spark
       .from("listings")
       .select("*")
-      .eq("status", "active")
       .order("created_at", { ascending: false })
-      .limit(5)
-      .then(({ data }) => setRecent((data as Listing[]) ?? []));
+      .limit(40)
+      .then(({ data }) => {
+        const rows = (data as Listing[]) ?? [];
+        // Test rows stay on the board for QA, never on the landing.
+        const real = rows.filter((l) => !/\btest\b/i.test(`${l.pet_name ?? ""} ${l.last_seen_location}`));
+        setRecent(real.filter((l) => l.status === "active").slice(0, 5));
+        if (real.length) setNotices(real.map(notice));
+      });
   }, []);
 
-  // Parallax: the hero wall of listing snippets drifts slower than the page scrolls.
+  // Fade sections up as they scroll in; everything is visible without JS or with reduced motion.
   useEffect(() => {
-    if (prefersReducedMotion()) return;
-    let ticking = false;
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        if (wallRef.current) wallRef.current.style.transform = `translateY(${window.scrollY * 0.12}px)`;
-        ticking = false;
-      });
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    const items = [...document.querySelectorAll(".lp .reveal")];
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) {
+      items.forEach((e) => e.classList.add("in"));
+      return;
+    }
+    document.documentElement.classList.add("js");
+    const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+    }), { rootMargin: "0px 0px -8% 0px" });
+    items.forEach((e) => io.observe(e));
+    return () => io.disconnect();
+  }, [recent.length]);
 
   return (
-    <div className="lp">
-      <section className="hero">
-        <HeroWall parallaxRef={wallRef} />
-        <div className="topbar">
-          <span className="name">Sighting</span>
-          <span><Link href="/board">Browse the board</Link> · <AuthBar /></span>
+    <div className="lp" id="top">
+      <header className="nav" aria-label="Site">
+        <nav className="nav-links" aria-label="Main">
+          <Link href="/board">Board</Link>
+          <a href="#how">How it works</a>
+          <a href="#get">Apps</a>
+        </nav>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <a className="nav-brand" href="#top" aria-label="Sighting home"><img src="/icon.svg" alt="" width={28} height={28} /><span>Sighting</span></a>
+        <div className="nav-end">
+          <span className="nav-auth"><AuthBar /></span>
+          <Link className="btn btn-solid" href="/post">Post</Link>
         </div>
-        <div className="container">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className="hero-icon" src="/icon.svg" alt="Sighting icon" width={88} height={88} />
-          <h1>A lost pet doesn&apos;t have time for a signup form.</h1>
-          <p>
-            A plain public board for lost and found pets. Post in under a minute with no
-            account, and keep a private link to close the listing the moment they turn up.
+      </header>
+
+      <section className="hero">
+        <HeroWall notices={notices} />
+        <div className="wrap center hero-copy">
+          <p className="label">Lost and found pets</p>
+          <h1>Bring them home.</h1>
+          <p className="lead">
+            A plain public board for lost and found pets. Post in under a minute with no account, and keep a
+            private link to close the listing the moment they turn up.
           </p>
-          <div className="buttons">
-            <Link className="btn btn-primary" href="/post">Post a lost or found pet</Link>
-            <Link className="btn btn-outline" href="/board">Browse the board</Link>
+          <div className="cta">
+            <Link className="btn btn-solid" href="/post">Post a lost or found pet</Link>
+            <Link className="btn btn-ghost" href="/board">Browse the board</Link>
           </div>
+          <p className="fine">No account. No ads. Free.</p>
+        </div>
+      </section>
+
+      <section className="band" id="how">
+        <div className="band-copy reveal">
+          <p className="label">How it works</p>
+          <h2>A lost pet doesn&apos;t have time for a signup form</h2>
+          <p>Everything on the board is public on purpose, so neighbours, shelters and vets can find it, and so can a search engine.</p>
+        </div>
+        <div className="cells">
+          {CELLS.map(([label, title, body]) => (
+            <article className="cell reveal" key={label}><p className="label">{label}</p><h3>{title}</h3><p>{body}</p></article>
+          ))}
         </div>
       </section>
 
       {recent.length > 0 && (
-        <section className={`recent reveal${recentIn ? " in-view" : ""}`} ref={recentRef}>
-          <div className="container" style={{ maxWidth: "44rem", paddingTop: "3rem" }}>
-            <h2 style={{ marginBottom: "1.25rem" }}>On the board right now</h2>
-            <ul>
-              {recent.map((l) => (
-                <li key={l.id}>
-                  <Link href={`/listing?id=${l.id}`}>
-                    <span className={`tag ${l.type}`}>{l.type}</span>
-                    <b>{l.pet_name || l.species}</b>
-                    <span className="meta">{l.species}{l.color ? `, ${l.color}` : ""}</span>
-                    <span className="where">{l.last_seen_location}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+        <section className="sec">
+          <div className="wrap center reveal">
+            <p className="label">Live</p>
+            <h2>On the board right now</h2>
           </div>
+          <ul className="recent reveal">
+            {recent.map((l) => (
+              <li key={l.id}>
+                <Link href={`/listing?id=${l.id}`}>
+                  <span className={`tag ${l.type}`}>{l.type}</span>
+                  <b>{l.pet_name || l.species}</b>
+                  <span className="meta">{l.species}{l.color ? `, ${l.color}` : ""}</span>
+                  <span className="where">{l.last_seen_location}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <p className="center more reveal"><Link href="/board">See the whole board</Link></p>
         </section>
       )}
 
-      <section className={`features reveal${featuresIn ? " in-view" : ""}`} ref={featuresRef}>
-        <div className="container">
-          <h2>How it works</h2>
-          <div className="grid">
-            <div className="feature">
-              <h3>No account needed</h3>
-              <p>
-                Post anonymously when every minute counts. You get a private edit link that
-                nobody else has, so only you can change or close your listing.
-              </p>
-            </div>
-            <div className="feature">
-              <h3>Searchable, not a feed</h3>
-              <p>
-                Filter lost from found and search by name, species, colour, tag or chip
-                number, or where the pet was last seen. Nothing scrolls away.
-              </p>
-            </div>
-            <div className="feature">
-              <h3>Public on purpose</h3>
-              <p>
-                Every listing is readable without logging in, so neighbours, shelters and
-                vets can actually find it — and so can a search engine.
-              </p>
-            </div>
-          </div>
+      <section className="sec plats" id="get">
+        <div className="wrap center reveal">
+          <p className="label">Everywhere a neighbour is</p>
+          <h2>Web, iPhone, Mac, Android</h2>
+        </div>
+        <div className="prods wrap">
+          <div className="prod reveal"><p className="label">Web</p><h3>Nothing to install</h3><p>The whole board works in any modern browser.</p><Link href="/board">Open the board</Link></div>
+          <div className="prod reveal"><p className="label">iPhone and Mac</p><h3>Native apps</h3><p>Built from the same sources, with a two pane window on the Mac. Not on the App Store yet.</p></div>
+          <div className="prod reveal"><p className="label">Android, Windows, Linux</p><h3>A real app</h3><p>One Kotlin codebase built into an APK, an MSI and a DEB.</p><a href="https://github.com/nulljosh/sighting/releases/latest" target="_blank" rel="noopener">Download from GitHub</a></div>
         </div>
       </section>
 
-      <section className={`features reveal${installIn ? " in-view" : ""}`} style={{ paddingTop: 0 }} ref={installRef}>
-        <div className="container">
-          <h2>Install it anywhere</h2>
-          <div className="grid">
-            <div className="feature">
-              <h3>Web</h3>
-              <p>Nothing to install. The whole board works in any modern browser.</p>
-              <Link href="/board">Open the board &rarr;</Link>
-            </div>
-            <div className="feature">
-              <h3>iPhone and Mac</h3>
-              <p>
-                Native apps built from the same sources, with a two-pane window on the Mac.
-                Not on the App Store yet.
-              </p>
-            </div>
-            <div className="feature">
-              <h3>Android, Windows, Linux</h3>
-              <p>
-                A real installable app, not a bookmark. One Kotlin/Compose codebase built
-                into an APK, an MSI and a DEB.
-              </p>
-              <a href="https://github.com/nulljosh/homeward/releases/latest" target="_blank" rel="noopener">Download from GitHub &rarr;</a>
-            </div>
-          </div>
+      <footer className="foot">
+        <div className="foot-top">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <div className="foot-brand"><img src="/icon.svg" alt="" width={40} height={40} /><b>Sighting</b><p>Bring them home.</p></div>
+          <nav className="foot-cols" aria-label="Footer">
+            <div><p className="label">Sighting</p><Link href="/board">Board</Link><Link href="/post">Post a pet</Link><a href="#how">How it works</a></div>
+            <div><p className="label">Source</p><a href="https://github.com/nulljosh/sighting">GitHub</a><a href="https://github.com/nulljosh/sighting/releases">Releases</a></div>
+            <div><p className="label">More</p><a href="mailto:trommatic@icloud.com?subject=Sighting">Feedback</a><a href="https://jaybulb.com">More apps</a><a href="#top">Back to top</a></div>
+          </nav>
         </div>
-      </section>
-
-      <section className={`closing reveal${closingIn ? " in-view" : ""}`} ref={closingRef}>
-        <div className="container">
-          <h2 style={{ marginBottom: "1rem" }}>Free, and staying that way</h2>
-          <p>
-            No ads, no accounts required, no reason to sit on a listing. If it helps one
-            animal get home it has paid for itself.
-          </p>
-          <div className="buttons">
-            <Link className="btn btn-primary" href="/post">Post a listing</Link>
-          </div>
-        </div>
-      </section>
-
-      <footer><div className="container">Built by Joshua.</div></footer>
+        <div className="word-band" aria-hidden="true"><canvas className="word-canvas" /></div>
+        <p className="legal">&copy; 2026 Joshua Trommel &middot; MIT License</p>
+      </footer>
+      <Script src="/footer-band.js" strategy="afterInteractive" />
     </div>
   );
 }

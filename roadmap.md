@@ -149,8 +149,8 @@ Skipped: GPS collars, pet sitting, shopping.
 | New name: Sighting, after Homeward and Maera | - | S | done 2026-10-28 |
 
 ## Ingested 2026-10-30
-- [ ] Needs Hermes' style, QA, and App Store
+- [ ] (11-01: style done, see Landing pass below; QA and the App Store record still open, no ASC record yet) Needs Hermes' style, QA, and App Store
 
 ## Landing pass, 2026-10-30
 
-- [ ] Rebuild the landing in Hermes' style.
+- [x] (11-01: live, the house layout from Cyllene: sticky nav, giant headline over the board's own notices, a paw orange band of six cells, the live board, platforms, and a footer band of Sighting's own engraved things in public/footer-band.js; test rows kept off the page) Rebuild the landing in Hermes' style.
