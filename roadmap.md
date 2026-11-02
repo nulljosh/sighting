@@ -110,8 +110,6 @@ instead of the board. Both fixed.
 ## Left
 
 ## Native Windows/Linux/Android (started 2026-08-30)
-- [ ] Posting from the native apps (photo upload + edit-token round trip); it
-      currently deep-links to the web form.
 - [ ] (blocked 11-01: pushing the tag creates a public GitHub release, which Claude Code refuses without an allow rule) Public MSI/DEB/APK downloads. The old labs run built all three green; `.github/workflows/native-release.yml` now builds them here and attaches them to a release on a `native-v*` tag. Desktop compile and the debug APK pass locally on JDK 17. To ship: `git tag native-v1.0.0 && git push origin native-v1.0.0`.
 
 ## TUI pilot (2026-09-05)

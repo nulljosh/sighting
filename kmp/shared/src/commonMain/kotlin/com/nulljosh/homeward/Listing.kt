@@ -18,6 +18,7 @@ data class Listing(
     @SerialName("contact_phone") val contactPhone: String? = null,
     @SerialName("contact_email") val contactEmail: String? = null,
     val status: String = "active",
+    @SerialName("edit_token") val editToken: String? = null,
 ) {
     val title: String get() = petName?.takeIf { it.isNotBlank() } ?: species.ifBlank { "Pet" }
 }

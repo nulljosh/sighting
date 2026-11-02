@@ -18,13 +18,14 @@ fun SightingTheme(content: @Composable () -> Unit) =
     MaterialTheme(colorScheme = lightColorScheme(), content = content)
 
 @Composable
-fun BoardScreen(client: ListingsClient = ListingsClient(), openWeb: (String) -> Unit = {}) {
+fun BoardScreen(client: ListingsClient = ListingsClient(), openWeb: (String) -> Unit = {}, pickPhoto: (suspend () -> Photo?)? = null) {
     var listings by remember { mutableStateOf<List<Listing>>(emptyList()) }
     var loading by remember { mutableStateOf(true) }
     var query by remember { mutableStateOf("") }
     var kind by remember { mutableStateOf(Kind.ALL) }
     var selected by remember { mutableStateOf<Listing?>(null) }
     var session by remember { mutableStateOf<Session?>(null) }
+    var posting by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         listings = client.active()
@@ -33,11 +34,18 @@ fun BoardScreen(client: ListingsClient = ListingsClient(), openWeb: (String) -> 
 
     val shown = listings.search(query, kind)
 
+    if (posting) PostDialog(client, session, pickPhoto, openWeb,
+        onPosted = { listings = listOf(it) + listings; selected = it },
+        onDismiss = { posting = false })
+
     Row(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
         Column(Modifier.weight(1f).padding(20.dp)) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Text("Sighting", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.SemiBold)
-                AuthBar(session, onSession = { session = it })
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Button(onClick = { posting = true }) { Text("Post a pet") }
+                    AuthBar(session, onSession = { session = it })
+                }
             }
             Spacer(Modifier.height(12.dp))
             OutlinedTextField(

@@ -28,3 +28,15 @@ class ListingTest {
     @Test fun titleFallsBackToSpecies() =
         assertEquals("dog", all[1].title)
 }
+
+class PostShapeTest {
+    @Test fun newListingLeavesOutEmptyFields() {
+        val body = ListingsClient.json.encodeToString(NewListing.serializer(), NewListing(type = "lost", species = "cat", last_seen_location = "Main St"))
+        assertEquals("""{"type":"lost","species":"cat","last_seen_location":"Main St"}""", body)
+    }
+
+    @Test fun createdRowCarriesTheEditLink() {
+        val row = ListingsClient.json.decodeFromString(Listing.serializer(), """{"id":"a","created_at":"x","type":"lost","species":"cat","last_seen_location":"Main","edit_token":"t1"}""")
+        assertEquals("https://sighting.jaybulb.com/listing/edit?token=t1", ListingsClient.editLink(row.editToken!!))
+    }
+}
