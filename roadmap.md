@@ -142,3 +142,5 @@ Skipped: GPS collars, pet sitting, shopping.
 
 ## Landing pass, 2026-10-30
 
+## Ingested 2026-11-13
+- [ ] Note: "Sighting. Why rejected". Last known (root roadmap, 2026-11-08): 4.3(a) spam plus a 2.1 on the iPhone version, answered 2026-11-07, waiting on Apple's reply. Could not re-pull today: the asc API is blocked by an unaccepted Apple agreement (see vault blocked-on-joshua.md).
