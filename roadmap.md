@@ -144,4 +144,4 @@ Skipped: GPS collars, pet sitting, shopping.
 
 ## Ingested 2026-11-13
 - [ ] Note: "Sighting. Why rejected". Last known (root roadmap, 2026-11-08): 4.3(a) spam plus a 2.1 on the iPhone version, answered 2026-11-07, waiting on Apple's reply. Could not re-pull today: the asc API is blocked by an unaccepted Apple agreement (see vault blocked-on-joshua.md).
-- [ ] asc 2026-11-13: Mac 1.0 is live. iOS 1.0 still rejected; Apple asked on 2026-11-12 (2.1) what happens to the account and its data when a user taps "Delete account" in settings. Read the delete path in code, answer truthfully in the thread, send on Joshua's yes.
+- [ ] asc 2026-11-13: Mac 1.0 is live. iOS 1.0 still rejected; Apple asked on 2026-11-12 (2.1) what happens to the account and its data when a user taps "Delete account" in settings. Answered 2026-11-13 after jaybulb-api 50ce43a made Delete account remove the user's posts, photos and alert sign-up (they used to stay public).

@@ -116,7 +116,7 @@ final class Account {
         Self.keychain(set: nil)
     }
 
-    /// Deletes the account; its listings stay up but lose their owner. Apple requires this in-app (5.1.1v).
+    /// Deletes the account and, server side, its pet posts, their photos and its alert sign-up. Apple requires this in-app (5.1.1v).
     func deleteAccount() async {
         if await run({ _ = try await self.call("DELETE", "/auth/user", authed: true) }) { signOut() }
     }
